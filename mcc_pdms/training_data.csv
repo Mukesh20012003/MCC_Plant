@@ -1,0 +1,7 @@
+batch_no,pretreatment_temperature,hydrolysis_temperature,hydrolysis_time_min,ph,washing_cycles,drying_temperature,drying_time_min,passed
+PB-2025-001,75,105,45,6.3,3,80,60,1
+PB-2025-001,75,105,45,6.3,3,80,60,1
+PB-2025-002,70,110,55,5.7,2,85,50,0
+PB-2025-002,70,110,55,5.7,2,85,50,0
+PB-2025-010,75,105,45,6.3,3,80,60,1
+PB-2025-011,68,112,30,5.4,2,90,40,0
