@@ -1,14 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Dashboard</h2>
-    <p>Welcome, {{ request.user.username }}!</p>
-    <p>Your role: {{ request.user.profile.role }}</p>
-    <p><a href="/admin/">Admin</a> | <a href="/api/raw-materials/">Raw Materials API</a> | <a href="/logout/">Logout</a></p>
-</body>
-</html>
+
+{% extends "plant/base.html" %}
+
+{% block title %}Dashboard - MCC PDMS{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12 mb-4">
+    <h2 class="mb-1">Dashboard</h2>
+    <p class="text-muted">
+      Welcome, <strong>{{ request.user.username }}</strong> ({{ request.user.profile.role }})
+    </p>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Production Batches</h5>
+        <p class="card-text text-muted mb-2">
+          View and manage MCC production batches and process parameters.
+        </p>
+        <a href="/api/production/batch/" class="btn btn-outline-primary btn-sm">
+          Open API
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Raw Materials</h5>
+        <p class="card-text text-muted mb-2">
+          Track raw material batches, suppliers, and properties.
+        </p>
+        <a href="/api/raw-materials/" class="btn btn-outline-primary btn-sm">
+          Open API
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Quality Control</h5>
+        <p class="card-text text-muted mb-2">
+          Record lab results and compare with ML predictions.
+        </p>
+        <a href="/api/qc/report/" class="btn btn-outline-primary btn-sm">
+          Open API
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
