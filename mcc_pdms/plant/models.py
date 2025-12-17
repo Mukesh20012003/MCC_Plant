@@ -41,24 +41,24 @@ class ProductionBatch(models.Model):
     def __str__(self):
         return self.batch_no
 
-
 class QCReport(models.Model):
-    batch = models.OneToOneField(
-        ProductionBatch, on_delete=models.CASCADE, related_name='qc_report'
+    batch = models.ForeignKey(
+        ProductionBatch,
+        on_delete=models.CASCADE,
+        related_name='qc_reports',  # note plural now
     )
 
     moisture_actual = models.FloatField(blank=True, null=True)
     particle_size_actual = models.FloatField(blank=True, null=True)
     passed = models.BooleanField(default=False)
 
-    # ML outputs (will be filled in later)
     predicted_pass = models.BooleanField(default=False)
     predicted_probability = models.FloatField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"QC for {self.batch.batch_no}"
+        return f"QC for {self.batch.batch_no} (id={self.id})"    
     
 
 
