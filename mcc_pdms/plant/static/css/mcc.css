@@ -1,10 +1,23 @@
 body {
-      background-color: #f5f7fb;
-    }
-    .pdms-navbar {
-      background: #0d6efd;
-    }
-    .pdms-navbar .navbar-brand,
-    .pdms-navbar .nav-link {
-      color: #fff !important;
-    }
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.pdms-navbar {
+  background: linear-gradient(90deg, #0d6efd, #3b82f6);
+}
+
+.card-pdms {
+  background: #111827;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+}
+
+.card-pdms .card-title {
+  color: #f9fafb;
+}
+
+.badge-role {
+  background: #1d4ed8;
+  color: #e5e7eb;
+}

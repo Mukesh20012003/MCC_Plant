@@ -1,59 +1,76 @@
-
 {% extends "plant/base.html" %}
-
+{% load static %}
 {% block title %}Dashboard - MCC PDMS{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-12 mb-4">
-    <h2 class="mb-1">Dashboard</h2>
+<div class="row mb-4">
+  <div class="col-12">
+    <h2 class="mb-1">Plant Overview</h2>
     <p class="text-muted">
-      Welcome, <strong>{{ request.user.username }}</strong> ({{ request.user.profile.role }})
+      Welcome, <span class="badge badge-role">{{ request.user.username }}</span>
+      &nbsp;Role: {{ request.user.profile.role }}
     </p>
   </div>
 </div>
 
-<div class="row g-3">
+<div class="row g-3" id="summary-cards">
   <div class="col-md-4">
-    <div class="card shadow-sm">
+    <div class="card card-pdms shadow-sm">
       <div class="card-body">
-        <h5 class="card-title">Production Batches</h5>
-        <p class="card-text text-muted mb-2">
-          View and manage MCC production batches and process parameters.
-        </p>
-        <a href="/api/production/batch/" class="btn btn-outline-primary btn-sm">
-          Open API
-        </a>
+        <h5 class="card-title">Total Batches</h5>
+        <p class="display-6" id="total-batches">-</p>
+        <p class="text-muted small mb-0">All recorded MCC production batches.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-pdms shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Predicted to Pass</h5>
+        <p class="display-6" id="predicted-pass">-</p>
+        <p class="text-muted small mb-0">Batches with ML prediction = pass.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card card-pdms shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">QC Reports</h5>
+        <p class="display-6" id="total-qc">-</p>
+        <p class="text-muted small mb-0">Total QC records stored.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-4">
+  <div class="col-md-6">
+    <div class="card card-pdms shadow-sm">
+      <div class="card-body">
+        <h5 class="card-title">Quick Links</h5>
+        <a href="/admin/plant/rawmaterial/" class="btn btn-outline-light btn-sm me-2 mt-1">Manage Raw Materials</a>
+        <a href="/admin/plant/productionbatch/" class="btn btn-outline-light btn-sm me-2 mt-1">Manage Batches</a>
+        <a href="/admin/plant/qcreport/" class="btn btn-outline-light btn-sm mt-1">Manage QC Reports</a>
       </div>
     </div>
   </div>
 
-  <div class="col-md-4">
-    <div class="card shadow-sm">
+  <div class="col-md-6">
+    <div class="card card-pdms shadow-sm">
       <div class="card-body">
-        <h5 class="card-title">Raw Materials</h5>
-        <p class="card-text text-muted mb-2">
-          Track raw material batches, suppliers, and properties.
-        </p>
-        <a href="/api/raw-materials/" class="btn btn-outline-primary btn-sm">
-          Open API
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">Quality Control</h5>
-        <p class="card-text text-muted mb-2">
-          Record lab results and compare with ML predictions.
-        </p>
-        <a href="/api/qc/report/" class="btn btn-outline-primary btn-sm">
-          Open API
-        </a>
+        <h5 class="card-title">Recent Batches</h5>
+        <ul class="list-group list-group-flush" id="recent-batches">
+          <!-- JS will fill this -->
+        </ul>
       </div>
     </div>
   </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'plant/js/mcc.js' %}"></script>
+{% endblock %}
+
+
+
