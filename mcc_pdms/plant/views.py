@@ -15,6 +15,11 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsQCOrReadOnly
 
 
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import RawMaterialForm, ProductionBatchForm, QCReportForm
+
+
 class RawMaterialViewSet(viewsets.ModelViewSet):
     queryset = RawMaterial.objects.all().order_by("-created_at")
     serializer_class = RawMaterialSerializer
@@ -28,6 +33,7 @@ class ProductionBatchViewSet(viewsets.ModelViewSet):
 class QCReportViewSet(viewsets.ModelViewSet):
     queryset = QCReport.objects.all().order_by("-created_at")
     serializer_class = QCReportSerializer
+    permission_classes = [IsAuthenticated, IsQCOrReadOnly]
 
 
 
@@ -55,7 +61,38 @@ def dashboard_view(request):
     return render(request, "plant/dashboard.html")
 
 
-class QCReportViewSet(viewsets.ModelViewSet):
-    queryset = QCReport.objects.all().order_by("-created_at")
-    serializer_class = QCReportSerializer
-    permission_classes = [IsAuthenticated, IsQCOrReadOnly]
+
+@login_required
+def create_raw_material_view(request):
+    if request.method == "POST":
+        form = RawMaterialForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    else:
+        form = RawMaterialForm()
+    return render(request, "plant/create_raw_material.html", {"form": form})
+
+
+@login_required
+def create_production_batch_view(request):
+    if request.method == "POST":
+        form = ProductionBatchForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    else:
+        form = ProductionBatchForm()
+    return render(request, "plant/create_production_batch.html", {"form": form})
+
+
+@login_required
+def create_qc_report_view(request):
+    if request.method == "POST":
+        form = QCReportForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("dashboard")
+    else:
+        form = QCReportForm()
+    return render(request, "plant/create_qc_report.html", {"form": form})

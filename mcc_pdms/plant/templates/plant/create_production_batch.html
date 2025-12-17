@@ -1,0 +1,62 @@
+{% extends "plant/base.html" %}
+{% load static %}
+
+{% block title %}Create Production Batch{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <div class="card card-pdms shadow-lg mt-4">
+      <div class="card-body p-4">
+        <h3 class="card-title mb-3">Create Production Batch</h3>
+        <p class="text-muted">
+          Enter batch number, select raw material, and define key process parameters.
+        </p>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
+
+          <div class="mb-3">
+            <label class="form-label">Batch number</label>
+            {{ form.batch_no }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Raw material</label>
+            {{ form.raw_material }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Process parameters (JSON)</label>
+            <small class="text-muted d-block mb-1">
+              Example: {"pretreatment_temperature": 75, "ph": 6.3, "drying_time_min": 60}
+            </small>
+            {{ form.process_parameters_json }}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Start time</label>
+              {{ form.start_time }}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">End time</label>
+              {{ form.end_time }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            {{ form.status }}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-light">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Batch</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
