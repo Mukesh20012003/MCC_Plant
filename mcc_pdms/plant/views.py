@@ -30,6 +30,11 @@ from .serializers import QualityPredictionRequestSerializer
 from .models import ProductionBatch, QCReport
 
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from .ml_service import predict_quality
+
+
 class RawMaterialViewSet(viewsets.ModelViewSet):
     queryset = RawMaterial.objects.all().order_by("-created_at")
     serializer_class = RawMaterialSerializer
@@ -67,8 +72,16 @@ def logout_view(request):
 
 @login_required
 def dashboard_view(request):
-    # simple placeholder dashboard
-    return render(request, "plant/dashboard.html")
+    total_batches = ProductionBatch.objects.count()
+    total_qc_reports = QCReport.objects.count()
+    predicted_to_pass = QCReport.objects.filter(predicted_pass=True).count()
+
+    context = {
+        "total_batches": total_batches,
+        "total_qc_reports": total_qc_reports,
+        "predicted_to_pass": predicted_to_pass,
+    }
+    return render(request, "plant/dashboard.html", context)
 
 
 
@@ -107,6 +120,30 @@ def create_qc_report_view(request):
         form = QCReportForm()
     return render(request, "plant/create_qc_report.html", {"form": form})
 
+
+@login_required
+def batches_page_view(request):
+    return render(request, "plant/batches.html")
+
+#Run prediction for all completed batches
+@login_required
+def run_predictions_for_completed_batches(request):
+    completed_batches = ProductionBatch.objects.filter(status="COMPLETED")
+    for batch in completed_batches:
+        params = batch.process_parameters_json or {}
+        try:
+            predicted_pass, probability = predict_quality(params)
+        except ValueError:
+            continue
+
+        qc = QCReport.objects.filter(batch=batch).order_by("-created_at").first()
+        if qc is None:
+            qc = QCReport(batch=batch)
+        qc.predicted_pass = predicted_pass
+        qc.predicted_probability = probability
+        qc.save()
+
+    return HttpResponseRedirect(reverse("batches_page"))
 
 
 @api_view(["POST"])

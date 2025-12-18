@@ -1,86 +1,160 @@
 {% extends "plant/base.html" %}
-{% load static %}
-
-{% block title %}Dashboard - MCC PDMS{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-  <div class="col-12">
-    <h2 class="mb-1">Plant Overview</h2>
-    <p class="text-muted">
-      Welcome,
-      <span class="badge badge-role">{{ request.user.username }}</span>
-      &nbsp;Role: {{ request.user.profile.role }}
-    </p>
+<div class="container-fluid py-4">
+
+  <!-- Page header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1">Plant Overview</h1>
+      <p class="text-muted mb-0">
+        Welcome, {{ request.user.username }} &nbsp;|&nbsp; Role: {{ request.user.groups.first.name|default:"ADMIN" }}
+      </p>
+    </div>
   </div>
+
+  <!-- Top metric cards -->
+  <div class="row g-3 mb-4">
+    <!-- Total Batches -->
+    <div class="col-md-4">
+      <div class="card card-pdms shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Batches</h5>
+          <p class="display-6 mb-0">
+            {{ total_batches }}
+          </p>
+          <p class="text-muted small mb-0">
+            All recorded MCC production batches.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Predicted to Pass -->
+    <div class="col-md-4">
+      <div class="card card-pdms shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Predicted to Pass</h5>
+          <p class="display-6 mb-0">
+            {{ predicted_to_pass }}
+          </p>
+          <p class="text-muted small mb-0">
+            Batches with ML prediction = pass.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QC Reports -->
+    <div class="col-md-4">
+      <div class="card card-pdms shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">QC Reports</h5>
+          <p class="display-6 mb-0">
+            {{ total_qc_reports }}
+          </p>
+          <p class="text-muted small mb-0">
+            Total QC records stored.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second row: Quick actions + Recent batches -->
+  <div class="row g-3">
+    <!-- Quick Actions -->
+    <div class="col-lg-6">
+      <div class="card card-pdms shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Quick Actions</h5>
+          <p class="text-muted small">
+            Create new records and run ML predictions directly from the dashboard.
+          </p>
+
+          <a href="{% url 'create_raw_material' %}"
+             class="btn btn-outline-light btn-sm me-2 mt-1">
+            Add Raw Material
+          </a>
+
+          <a href="{% url 'create_production_batch' %}"
+             class="btn btn-outline-light btn-sm me-2 mt-1">
+            Add Batch
+          </a>
+
+          <a href="{% url 'create_qc_report' %}"
+             class="btn btn-outline-light btn-sm me-2 mt-1">
+            Add QC Report
+          </a>
+
+          <a href="{% url 'batches_page' %}"
+             class="btn btn-outline-light btn-sm me-2 mt-1">
+            View Batches
+          </a>
+
+          <a href="{% url 'run_predictions' %}"
+             class="btn btn-primary btn-sm mt-1">
+            Run Predictions for Completed Batches
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Batches -->
+    <div class="col-lg-6">
+      <div class="card card-pdms shadow-sm h-100">
+        <div class="card-body">
+          <h5 class="card-title">Recent Batches</h5>
+          <p class="text-muted small">
+            Latest production batches with status and predictions.
+          </p>
+
+          {% if recent_batches %}
+          <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>Batch ID</th>
+                  <th>Status</th>
+                  <th>Predicted</th>
+                  <th>Probability</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for batch in recent_batches %}
+                <tr>
+                  <td>{{ batch.batch_number }}</td>
+                  <td>{{ batch.status }}</td>
+                  <td>
+                    {% if batch.latest_qc and batch.latest_qc.predicted_pass %}
+                      Pass
+                    {% elif batch.latest_qc and batch.latest_qc.predicted_pass == False %}
+                      Fail
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if batch.latest_qc and batch.latest_qc.predicted_probability %}
+                      {{ batch.latest_qc.predicted_probability|floatformat:2 }}
+                    {% else %}
+                      -
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p class="text-muted small mb-0">
+            No recent batches available. Create a new batch from Quick Actions.
+          </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
-
-<div class="row g-3" id="summary-cards">
-  <div class="col-md-4">
-    <div class="card card-pdms shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">Total Batches</h5>
-        <p class="display-6" id="total-batches">-</p>
-        <p class="text-muted small mb-0">All recorded MCC production batches.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card card-pdms shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">Predicted to Pass</h5>
-        <p class="display-6" id="predicted-pass">-</p>
-        <p class="text-muted small mb-0">Batches with ML prediction = pass.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-4">
-    <div class="card card-pdms shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">QC Reports</h5>
-        <p class="display-6" id="total-qc">-</p>
-        <p class="text-muted small mb-0">Total QC records stored.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="row g-3 mt-4">
-  <div class="col-md-6">
-    <div class="card card-pdms shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">Quick Actions</h5>
-        <p class="text-muted small">
-          Create new records directly from the dashboard.
-        </p>
-        <a href="{% url 'create_raw_material' %}" class="btn btn-outline-light btn-sm me-2 mt-1">
-          Add Raw Material
-        </a>
-        <a href="{% url 'create_production_batch' %}" class="btn btn-outline-light btn-sm me-2 mt-1">
-          Add Batch
-        </a>
-        <a href="{% url 'create_qc_report' %}" class="btn btn-outline-light btn-sm mt-1">
-          Add QC Report
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <div class="card card-pdms shadow-sm">
-      <div class="card-body">
-        <h5 class="card-title">Recent Batches</h5>
-        <ul class="list-group list-group-flush" id="recent-batches">
-          <!-- Filled by JS -->
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-{% block extra_js %}
-<script src="{% static 'plant/js/mcc.js' %}"></script>
-{% endblock %}
+{% endblock content %}

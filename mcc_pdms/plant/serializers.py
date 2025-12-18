@@ -17,6 +17,7 @@ class RawMaterialSerializer(serializers.ModelSerializer):
 
 class ProductionBatchSerializer(serializers.ModelSerializer):
     raw_material_detail = RawMaterialSerializer(source="raw_material", read_only=True)
+    latest_qc = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductionBatch
@@ -30,7 +31,23 @@ class ProductionBatchSerializer(serializers.ModelSerializer):
             "end_time",
             "status",
             "created_at",
+            "latest_qc",
         ]
+
+    def get_latest_qc(self, obj):
+        qc = obj.qc_reports.order_by("-created_at").first()
+        if not qc:
+            return None
+        return {
+            "id": qc.id,
+            "moisture_actual": qc.moisture_actual,
+            "particle_size_actual": qc.particle_size_actual,
+            "passed": qc.passed,
+            "predicted_pass": qc.predicted_pass,
+            "predicted_probability": qc.predicted_probability,
+            "created_at": qc.created_at,
+        }
+
 
 
 class QCReportSerializer(serializers.ModelSerializer):

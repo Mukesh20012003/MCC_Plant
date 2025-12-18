@@ -1,0 +1,46 @@
+{% extends "plant/base.html" %}
+{% load static %}
+
+{% block title %}Batches - MCC PDMS{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+  <div class="col-12 d-flex justify-content-between align-items-center">
+    <div>
+      <h2 class="mb-1">Production Batches</h2>
+      <p class="text-muted mb-0">Predictions vs QC results.</p>
+    </div>
+    <a href="{% url 'create_production_batch' %}" class="btn btn-primary btn-sm">
+      + Add Batch
+    </a>
+    <a href="{% url 'run_predictions' %}" class="btn btn-outline-light btn-sm ms-2">
+        Run Predictions
+    </a>
+
+  </div>
+</div>
+
+<div class="card card-pdms shadow-sm">
+  <div class="card-body">
+    <table class="table table-dark table-striped align-middle mb-0" id="batches-table">
+      <thead>
+        <tr>
+          <th>Batch No</th>
+          <th>Raw Material</th>
+          <th>Status</th>
+          <th>Predicted</th>
+          <th>Probability</th>
+          <th>Actual QC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- filled by JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'plant/js/batches.js' %}"></script>
+{% endblock %}
