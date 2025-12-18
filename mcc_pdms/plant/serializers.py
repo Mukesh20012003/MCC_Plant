@@ -49,3 +49,15 @@ class QCReportSerializer(serializers.ModelSerializer):
             "predicted_probability",
             "created_at",
         ]
+
+
+class QualityPredictionRequestSerializer(serializers.Serializer):
+    batch_id = serializers.IntegerField(required=False)
+    process_parameters = serializers.DictField(required=False)
+
+    def validate(self, attrs):
+        if not attrs.get("batch_id") and not attrs.get("process_parameters"):
+            raise serializers.ValidationError(
+                "Either batch_id or process_parameters must be provided."
+            )
+        return attrs
