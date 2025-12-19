@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import RawMaterialViewSet, ProductionBatchViewSet, QCReportViewSet, login_view, logout_view, dashboard_view, create_raw_material_view, create_production_batch_view, create_qc_report_view, predict_quality_view, batches_page_view,run_predictions_for_completed_batches
+from .views import RawMaterialViewSet, ProductionBatchViewSet, QCReportViewSet, login_view, logout_view, dashboard_view, create_raw_material_view, create_production_batch_view, create_qc_report_view, predict_quality_view, batches_page_view,run_predictions_for_completed_batches, production_batches_list_view, qc_reports_list_view, predicted_to_pass_list_view
 
 router = DefaultRouter()
 router.register(r"raw-materials", RawMaterialViewSet, basename="raw-material")
@@ -20,5 +20,7 @@ urlpatterns = [
     
     path("batches/", batches_page_view, name="batches_page"),
     path("batches/run-predictions/", run_predictions_for_completed_batches ,name="run_predictions"),
-    
+    path("batches/all/", production_batches_list_view, name="batches_list"),
+    path("qc-reports/", qc_reports_list_view, name="qc_reports_list"),
+    path("qc-reports/predicted-pass/", predicted_to_pass_list_view, name="predicted_to_pass_list"),
 ]

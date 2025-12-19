@@ -8,8 +8,26 @@
     <div>
       <h1 class="h3 mb-1">Plant Overview</h1>
       <p class="text-muted mb-0">
-        Welcome, {{ request.user.username }} &nbsp;|&nbsp; Role: {{ request.user.groups.first.name|default:"ADMIN" }}
+        Welcome, {{ request.user.username }} &nbsp;|&nbsp;
+        {% with role=request.user.profile.role %}
+          Role:
+          {% if role == "ADMIN" %}
+            ADMIN
+          {% elif role == "PLANT_MANAGER" %}
+            PLANT MANAGER
+          {% elif role == "QC_ANALYST" %}
+            QC ANALYST
+          {% else %}
+            OPERATOR
+          {% endif %}
+        {% endwith %}
+
       </p>
+
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
     </div>
   </div>
 
@@ -19,28 +37,44 @@
     <div class="col-md-4">
       <div class="card card-pdms shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">Total Batches</h5>
-          <p class="display-6 mb-0">
-            {{ total_batches }}
-          </p>
-          <p class="text-muted small mb-0">
-            All recorded MCC production batches.
-          </p>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+            <h5 class="card-title">Total Batches</h5>
+            <p class="display-6 mb-0">
+              {{ total_batches }}
+            </p>
+            <p class="text-muted small mb-0">
+              All recorded MCC production batches.
+            </p>
+          </div>
+          <div>
+              <a href="{% url 'batches_list' %}" class="btn btn-outline-secondary btn-sm">
+                View
+              </a>
+          </div>
         </div>
       </div>
-    </div>
+    </div> 
+    </div> 
 
     <!-- Predicted to Pass -->
     <div class="col-md-4">
       <div class="card card-pdms shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">Predicted to Pass</h5>
-          <p class="display-6 mb-0">
-            {{ predicted_to_pass }}
-          </p>
-          <p class="text-muted small mb-0">
-            Batches with ML prediction = pass.
-          </p>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="card-title mb-1">Predicted to Pass</h5>
+              <p class="display-6 mb-0">
+                {{ predicted_to_pass }}
+              </p>
+              <p class="text-muted small mb-0">
+                Batches with ML prediction = pass.
+              </p>
+            </div>
+            <a href="{% url 'predicted_to_pass_list' %}" class="btn btn-outline-secondary btn-sm">
+              View
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -49,13 +83,22 @@
     <div class="col-md-4">
       <div class="card card-pdms shadow-sm">
         <div class="card-body">
-          <h5 class="card-title">QC Reports</h5>
-          <p class="display-6 mb-0">
-            {{ total_qc_reports }}
-          </p>
-          <p class="text-muted small mb-0">
-            Total QC records stored.
-          </p>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="card-title mb-1">QC Reports</h5>
+              <p class="display-6 mb-0">
+                {{ total_qc_reports }}
+              </p>
+              <p class="text-muted small mb-0">
+                Total QC records stored.
+              </p>
+            </div>
+            <div>
+              <a href="{% url 'qc_reports_list' %}" class="btn btn-outline-secondary btn-sm">
+                View
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -72,39 +115,57 @@
             Create new records and run ML predictions directly from the dashboard.
           </p>
 
-          <a href="{% url 'create_raw_material' %}"
-             class="btn btn-outline-light btn-sm me-2 mt-1">
-            Add Raw Material
-          </a>
+    {% with role=request.user.profile.role %}
 
-          <a href="{% url 'create_production_batch' %}"
-             class="btn btn-outline-light btn-sm me-2 mt-1">
-            Add Batch
-          </a>
+    {% if role == "ADMIN" %}
+      <a href="{% url 'create_raw_material' %}"
+        class="btn btn-outline-light btn-sm me-2 mt-1">
+        Add Raw Material
+      </a>
+    {% endif %}
 
-          <a href="{% url 'create_qc_report' %}"
-             class="btn btn-outline-light btn-sm me-2 mt-1">
-            Add QC Report
-          </a>
+    {% if role == "ADMIN" or role == "PLANT_MANAGER" %}
+      <a href="{% url 'create_production_batch' %}"
+        class="btn btn-outline-light btn-sm me-2 mt-1">
+        Add Batch
+      </a>
+    {% endif %}
 
-          <a href="{% url 'batches_page' %}"
-             class="btn btn-outline-light btn-sm me-2 mt-1">
-            View Batches
-          </a>
+    {% if role == "ADMIN" or role == "QC_ANALYST" %}
+      <a href="{% url 'create_qc_report' %}"
+        class="btn btn-outline-light btn-sm me-2 mt-1">
+        Add QC Report
+      </a>
+    {% endif %}
 
-          <a href="{% url 'run_predictions' %}"
-             class="btn btn-primary btn-sm mt-1">
-            Run Predictions for Completed Batches
-          </a>
-        </div>
-      </div>
+    <a href="{% url 'batches_list' %}"
+      class="btn btn-outline-light btn-sm me-2 mt-1">
+      View All Batches
+    </a>
+
+    {% if role == "ADMIN" %}
+      <a href="{% url 'run_predictions' %}"
+        class="btn btn-primary btn-sm mt-1">
+        Run Predictions for Completed Batches
+      </a>
+    {% endif %}
+
+  {% endwith %}
+
     </div>
+  </div>
+</div>
 
     <!-- Recent Batches -->
     <div class="col-lg-6">
       <div class="card card-pdms shadow-sm h-100">
         <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-2">
           <h5 class="card-title">Recent Batches</h5>
+          <a href="{% url 'batches_list' %}" class="btn btn-outline-secondary btn-sm">
+              View All
+            </a>
+          </div>
           <p class="text-muted small">
             Latest production batches with status and predictions.
           </p>
@@ -123,7 +184,7 @@
               <tbody>
                 {% for batch in recent_batches %}
                 <tr>
-                  <td>{{ batch.batch_number }}</td>
+                  <td>{{ batch.batch_no }}</td>
                   <td>{{ batch.status }}</td>
                   <td>
                     {% if batch.latest_qc and batch.latest_qc.predicted_pass %}

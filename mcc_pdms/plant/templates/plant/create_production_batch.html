@@ -17,38 +17,39 @@
           {{ form.non_field_errors }}
 
           <div class="mb-3">
-            <label class="form-label">Batch number</label>
-            {{ form.batch_no }}
+            {{ form.batch_no.label_tag }} {{ form.batch_no }}
+          </div>
+          <div class="mb-3">
+            {{ form.raw_material.label_tag }} {{ form.raw_material }}
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Raw material</label>
-            {{ form.raw_material }}
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Process parameters (JSON)</label>
-            <small class="text-muted d-block mb-1">
-              Example: {"pretreatment_temperature": 75, "ph": 6.3, "drying_time_min": 60}
-            </small>
-            {{ form.process_parameters_json }}
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              {{ form.temperature_c.label_tag }} {{ form.temperature_c }}
+            </div>
+            <div class="col-md-4 mb-3">
+              {{ form.ph.label_tag }} {{ form.ph }}
+            </div>
+            <div class="col-md-4 mb-3">
+              {{ form.reaction_time_min.label_tag }} {{ form.reaction_time_min }}
+            </div>
           </div>
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Start time</label>
-              {{ form.start_time }}
+              {{ form.start_time.label_tag }} {{ form.start_time }}
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">End time</label>
-              {{ form.end_time }}
+              {{ form.end_time.label_tag }} {{ form.end_time }}
             </div>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Status</label>
-            {{ form.status }}
+            {{ form.status.label_tag }} {{ form.status }}
           </div>
+
+          {{ form.process_parameters_json }}  {# hidden field #}
+
 
           <div class="d-flex justify-content-between">
             <a href="{% url 'dashboard' %}" class="btn btn-outline-light">Cancel</a>

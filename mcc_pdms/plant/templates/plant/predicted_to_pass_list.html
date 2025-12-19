@@ -1,0 +1,37 @@
+{% extends "plant/base.html" %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Predicted to Pass (ML)</h1>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+  {% if reports %}
+  <div class="table-responsive">
+    <table class="table table-sm align-middle">
+      <thead>
+        <tr>
+          <th>Batch</th>
+          <th>Probability</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reports %}
+        <tr>
+          <td>{{ r.batch.batch_no }}</td>
+          <td>{{ r.predicted_probability|floatformat:2 }}</td>
+          <td>{{ r.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted mb-0">No ML predictions marked as pass yet.</p>
+  {% endif %}
+</div>
+{% endblock content %}
