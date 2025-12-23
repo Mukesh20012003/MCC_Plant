@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import RawMaterialViewSet, ProductionBatchViewSet, QCReportViewSet, login_view, logout_view, dashboard_view, create_raw_material_view, create_production_batch_view, create_qc_report_view, predict_quality_view, batches_page_view,run_predictions_for_completed_batches, production_batches_list_view, qc_reports_list_view, predicted_to_pass_list_view
+from .views_api import dashboard_summary_api, qc_reports_predicted_pass_api, current_user_api
 
 router = DefaultRouter()
 router.register(r"raw-materials", RawMaterialViewSet, basename="raw-material")
@@ -23,4 +24,9 @@ urlpatterns = [
     path("batches/all/", production_batches_list_view, name="batches_list"),
     path("qc-reports/", qc_reports_list_view, name="qc_reports_list"),
     path("qc-reports/predicted-pass/", predicted_to_pass_list_view, name="predicted_to_pass_list"),
+
+
+    path("api/dashboard-summary/", dashboard_summary_api, name="dashboard_summary_api"),
+    path("api/qc-reports/predicted-pass/", qc_reports_predicted_pass_api, name="qc_reports_predicted_pass_api"),
+    path("api/me/", current_user_api, name="current_user_api"),
 ]
