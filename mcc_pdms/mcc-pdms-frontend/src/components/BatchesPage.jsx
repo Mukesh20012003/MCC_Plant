@@ -37,7 +37,7 @@ function BatchesPage() {
   });
 
   return (
-    <div className="container py-4">
+    <div className="py-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="h4 mb-0">All Production Batches</h2>
         <div className="d-flex gap-2">

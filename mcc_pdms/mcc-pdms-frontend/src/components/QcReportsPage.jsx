@@ -30,7 +30,7 @@ function QcReportsPage() {
   });
 
   return (
-    <div className="container py-4">
+    <div className="py-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2 className="h3 mb-0">QC Reports</h2>
         <div className="btn-group btn-group-sm">

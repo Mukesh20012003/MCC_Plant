@@ -23,7 +23,7 @@ function PredictedToPassPage() {
   if (error) return <p className="text-center text-danger mt-5">{error}</p>;
 
   return (
-    <div className="container py-4">
+    <div className="py-4">
       <h1 className="h3 mb-4">Predicted to Pass (ML)</h1>
       <div className="card shadow-sm">
         <div className="card-body">

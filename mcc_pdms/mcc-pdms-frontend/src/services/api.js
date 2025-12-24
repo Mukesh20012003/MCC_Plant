@@ -52,3 +52,13 @@ export async function fetchCurrentUser() {
   if (!res.ok) throw new Error("Failed to load user");
   return res.json();
 }
+
+export async function fetchRagAnswer(question) {
+  const res = await fetch(`${API_BASE}/api/rag-chat/`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: JSON.stringify({ question }),
+  });
+  if (!res.ok) throw new Error("Failed to get RAG answer");
+  return res.json();
+}

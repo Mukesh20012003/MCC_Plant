@@ -23,7 +23,7 @@ import BatchesPage from "./components/BatchesPage";
 import QcReportsPage from "./components/QcReportsPage";
 import PredictedToPassPage from "./components/PredictedToPassPage";
 import Layout from "./components/Layout";
-
+import RagChatWidget from "./components/RagChatWidget";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +34,7 @@ function App() {
     setIsLoggedIn(!!token);
   }, []);
 
-  if (!isLoggedIn) {
+if (!isLoggedIn) {
     return <LoginForm onLoginSuccess={() => setIsLoggedIn(true)} />;
   }
 
@@ -44,13 +44,15 @@ function App() {
   else if (page === "predicted") content = <PredictedToPassPage />;
   else content = <Dashboard />;
 
-// In App.jsx around <Layout>
+
+// src/App.jsx (inside the logged-in branch)
 return (
   <div className="min-vh-100 d-flex justify-content-center bg-light">
     <div className="w-100" style={{ maxWidth: "1200px" }}>
       <Layout currentPage={page} onChangePage={setPage}>
         {content}
       </Layout>
+      <RagChatWidget />   {/* add this line */}
     </div>
   </div>
 );

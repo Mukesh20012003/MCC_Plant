@@ -305,8 +305,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from .models import ProductionBatch, QCReport
+from rest_framework import status
+from .rag_service import answer_with_rag
 
 @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
 @permission_classes([AllowAny])
 def dashboard_summary_api(request):
     total_batches = ProductionBatch.objects.count()
@@ -338,6 +341,7 @@ def dashboard_summary_api(request):
 
 
 @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
 @permission_classes([AllowAny])
 def qc_reports_predicted_pass_api(request):
     reports = (
@@ -359,6 +363,7 @@ def qc_reports_predicted_pass_api(request):
 
 
 @api_view(["GET"])
+# @permission_classes([IsAuthenticated])
 @permission_classes([AllowAny])
 def current_user_api(request):
     profile = getattr(request.user, "profile", None)
@@ -366,3 +371,16 @@ def current_user_api(request):
         "username": request.user.username,
         "role": profile.role if profile else "OPERATOR",
     })
+
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def rag_chat_api(request):
+    question = request.data.get("question", "").strip()
+    if not question:
+        return Response(
+            {"error": "Question is required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    answer = answer_with_rag(question)
+    return Response({"question": question, "answer": answer})
