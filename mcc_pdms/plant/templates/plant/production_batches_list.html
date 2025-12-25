@@ -16,9 +16,11 @@
         <tr>
           <th>ID</th>
           <th>Batch Number</th>
+          <th>Raw Material</th>
           <th>Status</th>
           <th>Start</th>
           <th>End</th>
+          <th>Anomaly</th>
         </tr>
       </thead>
       <tbody>
@@ -26,9 +28,18 @@
         <tr>
           <td>{{ batch.id }}</td>
           <td>{{ batch.batch_no }}</td>
+          <td>{{ batch.raw_material }}</td>
           <td>{{ batch.status }}</td>
           <td>{{ batch.start_time }}</td>
           <td>{{ batch.end_time }}</td>
+          <td>
+            <button class="btn btn-sm btn-outline-secondary"
+                    data-batch-id="{{ batch.id }}"
+                    onclick="checkAnomaly(this.dataset.batchId, this)">
+              Check
+            </button>
+            <span class="badge ms-2 d-none"></span>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -38,4 +49,33 @@
   <p class="text-muted mb-0">No production batches created yet.</p>
   {% endif %}
 </div>
+
+<script>
+  function checkAnomaly(batchId, btn) {
+    const badge = btn.nextElementSibling;
+    fetch("/api/ml/detect-anomaly/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ batch_id: batchId }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        badge.classList.remove("d-none");
+        badge.title = "Score: " + data.score.toFixed(3);
+        if (data.is_anomaly) {
+          badge.className = "badge ms-2 bg-danger";
+          badge.textContent = "High";
+        } else {
+          badge.className = "badge ms-2 bg-success";
+          badge.textContent = "Normal";
+        }
+      })
+      .catch(() => {
+        alert("Failed to check anomaly");
+      });
+  }
+</script>
 {% endblock content %}

@@ -239,7 +239,8 @@ def qc_reports_list_view(request):
 
 
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
+# @permission_classes([AllowAny])
 def predict_quality_view(request):
     """
     POST /api/ml/predict-quality/
@@ -299,88 +300,83 @@ def predicted_to_pass_list_view(request):
 
 
 
+# def rag_demo_view(request):
+#     # If you have the JWT somewhere, put it here.
+#     # For now, hard‑code or leave empty string as placeholder.
+#     access_token_string = ""  # TODO: get real token if you secure this path
+
+#     return render(request, "plant/rag_demo.html", {
+#         "jwt_access": access_token_string,
+#     })
 
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from .models import ProductionBatch, QCReport
-from rest_framework import status
-from .rag_service import answer_with_rag
-
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-@permission_classes([AllowAny])
-def dashboard_summary_api(request):
-    total_batches = ProductionBatch.objects.count()
-    total_qc_reports = QCReport.objects.count()
-    predicted_to_pass = QCReport.objects.filter(predicted_pass=True).count()
-
-    recent_batches = []
-    for batch in ProductionBatch.objects.order_by("-created_at")[:5]:
-        latest_qc = (
-            QCReport.objects.filter(batch=batch)
-            .order_by("-created_at")
-            .first()
-        )
-        recent_batches.append({
-            "id": batch.id,
-            "batch_no": batch.batch_no,
-            "status": batch.status,
-            "predicted": None if not latest_qc else latest_qc.predicted_pass,
-            "probability": None if not latest_qc else latest_qc.predicted_probability,
-        })
-
-    return Response({
-        "total_batches": total_batches,
-        "total_qc_reports": total_qc_reports,
-        "predicted_to_pass": predicted_to_pass,
-        "recent_batches": recent_batches,
-    })
+# from rest_framework.decorators import api_view, permission_classes
+# from rest_framework.permissions import IsAuthenticated, AllowAny
+# from rest_framework.response import Response
+# from .models import ProductionBatch, QCReport
+# from rest_framework import status
 
 
+# @api_view(["GET"])
+# # @permission_classes([IsAuthenticated])
+# @permission_classes([AllowAny])
+# def dashboard_summary_api(request):
+#     total_batches = ProductionBatch.objects.count()
+#     total_qc_reports = QCReport.objects.count()
+#     predicted_to_pass = QCReport.objects.filter(predicted_pass=True).count()
 
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-@permission_classes([AllowAny])
-def qc_reports_predicted_pass_api(request):
-    reports = (
-        QCReport.objects.select_related("batch")
-        .filter(predicted_pass=True)
-        .order_by("-created_at")
-    )
-    data = [
-        {
-            "id": r.id,
-            "batch_no": r.batch.batch_no,
-            "predicted_probability": r.predicted_probability,
-            "created_at": r.created_at,
-        }
-        for r in reports
-    ]
-    return Response(data)
+#     recent_batches = []
+#     for batch in ProductionBatch.objects.order_by("-created_at")[:5]:
+#         latest_qc = (
+#             QCReport.objects.filter(batch=batch)
+#             .order_by("-created_at")
+#             .first()
+#         )
+#         recent_batches.append({
+#             "id": batch.id,
+#             "batch_no": batch.batch_no,
+#             "status": batch.status,
+#             "predicted": None if not latest_qc else latest_qc.predicted_pass,
+#             "probability": None if not latest_qc else latest_qc.predicted_probability,
+#         })
+
+#     return Response({
+#         "total_batches": total_batches,
+#         "total_qc_reports": total_qc_reports,
+#         "predicted_to_pass": predicted_to_pass,
+#         "recent_batches": recent_batches,
+#     })
 
 
 
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-@permission_classes([AllowAny])
-def current_user_api(request):
-    profile = getattr(request.user, "profile", None)
-    return Response({
-        "username": request.user.username,
-        "role": profile.role if profile else "OPERATOR",
-    })
+# @api_view(["GET"])
+# # @permission_classes([IsAuthenticated])
+# @permission_classes([AllowAny])
+# def qc_reports_predicted_pass_api(request):
+#     reports = (
+#         QCReport.objects.select_related("batch")
+#         .filter(predicted_pass=True)
+#         .order_by("-created_at")
+#     )
+#     data = [
+#         {
+#             "id": r.id,
+#             "batch_no": r.batch.batch_no,
+#             "predicted_probability": r.predicted_probability,
+#             "created_at": r.created_at,
+#         }
+#         for r in reports
+#     ]
+#     return Response(data)
 
-@api_view(["POST"])
-@permission_classes([AllowAny])
-def rag_chat_api(request):
-    question = request.data.get("question", "").strip()
-    if not question:
-        return Response(
-            {"error": "Question is required."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
 
-    answer = answer_with_rag(question)
-    return Response({"question": question, "answer": answer})
+
+# @api_view(["GET"])
+# # @permission_classes([IsAuthenticated])
+# @permission_classes([AllowAny])
+# def current_user_api(request):
+#     profile = getattr(request.user, "profile", None)
+#     return Response({
+#         "username": request.user.username,
+#         "role": profile.role if profile else "OPERATOR",
+#     })

@@ -1,6 +1,6 @@
 // src/components/BatchesPage.jsx
 import { useEffect, useState } from "react";
-import { fetchBatches } from "../services/api";
+import { fetchBatches,detectAnomaly } from "../services/api";
 
 function BatchesPage() {
   const [batches, setBatches] = useState([]);
@@ -8,6 +8,22 @@ function BatchesPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [anomalyMap, setAnomalyMap] = useState({});
+
+
+   const handleCheckAnomaly = async (batchId) => {
+    try {
+      const res = await detectAnomaly(batchId);
+      setAnomalyMap((prev) => ({
+        ...prev,
+        [batchId]: { score: res.score, is_anomaly: res.is_anomaly },
+      }));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to check anomaly");
+    }
+  };
+
 
   useEffect(() => {
     fetchBatches()
@@ -71,6 +87,7 @@ function BatchesPage() {
                   <th>Status</th>
                   <th>Start</th>
                   <th>End</th>
+                  <th>Anomaly</th>
                 </tr>
               </thead>
               <tbody>
@@ -94,16 +111,39 @@ function BatchesPage() {
                     </td>
                     <td>{b.start_time}</td>
                     <td>{b.end_time}</td>
+
+                    {/* Anomaly column */}
+                    <td>
+                      <button
+                        className="btn btn-sm btn-outline-secondary"
+                        onClick={() => handleCheckAnomaly(b.id)}
+                      >
+                        Check
+                      </button>
+                      {anomalyMap[b.id] && (
+                        <span
+                          className={
+                            "badge ms-2 " +
+                            (anomalyMap[b.id].is_anomaly ? "bg-danger" : "bg-success")
+                          }
+                          title={`Score: ${anomalyMap[b.id].score.toFixed(3)}`}
+                        >
+                          {anomalyMap[b.id].is_anomaly ? "High" : "Normal"}
+                        </span>
+                      )}
+                    </td>
                   </tr>
                 ))}
+
                 {visibleBatches.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="text-muted">
+                    <td colSpan="6" className="text-muted">
                       No batches match the filters.
                     </td>
                   </tr>
                 )}
               </tbody>
+
             </table>
           </div>
         </div>

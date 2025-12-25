@@ -1,0 +1,49 @@
+Troubleshooting Common MCC Batch Issues
+
+High final moisture:
+- Possible causes:
+  - Insufficient drying time.
+  - Low dryer inlet temperature.
+  - Wet feed with higher-than-normal moisture.
+- Recommended actions:
+  - Extend drying duration while monitoring product temperature.
+  - Increase inlet air temperature within safe limits.
+  - Check dewatering performance and wet cake solids.
+
+Low moisture but poor flow:
+- Possible causes:
+  - Over-drying leading to excessive fines.
+  - Agglomeration in the dryer followed by aggressive milling.
+- Recommended actions:
+  - Reduce dryer outlet temperature or time.
+  - Optimize mill speed and screen to balance particle size.
+
+Off-spec bulk density:
+- Low bulk density:
+  - Excessive fines and porous particles.
+  - Inadequate compaction during processing.
+- High bulk density:
+  - Oversized particles or strong agglomerates.
+- Recommended actions:
+  - Adjust milling conditions and screen size.
+  - Review drying profile and sieve configuration.
+
+Frequent QC failures:
+- Check recent changes in raw material lots and COAs.
+- Review reactor temperature, reaction time, and acid concentration.
+- Examine washing cycles, pH control, and conductivity endpoints.
+- Verify dryer and mill setpoints and maintenance status.
+
+Color or appearance issues:
+- Yellow or dark product may indicate:
+  - Overheating during drying.
+  - Impurities in raw materials or process water.
+- Actions:
+  - Review temperature trends and hotspots in dryer.
+  - Check raw material and water quality.
+
+General troubleshooting approach:
+- Start with a review of batch records and trends.
+- Identify any deviations or alarms during the batch.
+- Compare with a reference “good” batch.
+- Involve production, QC, and QA for complex investigations.

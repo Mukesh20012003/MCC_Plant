@@ -1,0 +1,47 @@
+MCC PDMS Glossary and Field Definitions
+
+Batch number (batch_no):
+- Unique identifier for a production batch of MCC.
+- Used to link manufacturing records and QC results.
+
+Raw material:
+- The primary cellulose source used for MCC production.
+- Typically purified alpha-cellulose from an approved supplier.
+
+Status:
+- RUNNING: batch is currently in process.
+- COMPLETED: batch has finished all processing steps.
+- FAILED: batch has been rejected or terminated.
+
+Start time and end time:
+- Timestamps for the beginning and completion of batch processing.
+- Used to analyze cycle time and equipment utilization.
+
+QC report:
+- A record containing analytical test results for a batch.
+- Linked to the batch via a foreign key relationship.
+
+Predicted outcome:
+- Result from an ML model indicating if the batch is likely to pass or fail QC.
+- Does not replace actual QC; used for early warning.
+
+Predicted probability:
+- Probability score between 0 and 1 indicating model confidence.
+- Higher values closer to 1 indicate higher confidence for the predicted class.
+
+Anomaly score:
+- A numeric score from an anomaly detection model.
+- Higher scores indicate that the batch behavior is less typical compared to historical data.
+
+Anomaly flag (is_anomaly):
+- Boolean flag derived from the anomaly score.
+- true: batch is considered anomalous and may need review.
+- false: batch appears normal.
+
+RAG document:
+- A text document stored in the RAG index.
+- Used by the assistant to answer questions about MCC process and quality.
+
+RAG chunk:
+- A small section of a document used for retrieval.
+- Each chunk has its own embedding vector to support semantic search.

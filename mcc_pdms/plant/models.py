@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 
 
+
 class RawMaterial(models.Model):
     name = models.CharField(max_length=100)
     supplier = models.CharField(max_length=100, blank=True, null=True)
@@ -104,4 +105,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
+
 

@@ -1,0 +1,100 @@
+Alarms and Interlocks – MCC Plant
+
+Objective:
+To describe typical alarms and interlocks in the MCC plant and how operators should respond.
+
+Alarm categories:
+- Critical alarms: Events that may directly affect safety, environment, or product quality.
+- High-priority alarms: Significant process deviations that require timely action.
+- Low-priority alarms: Minor deviations or status notifications.
+
+Reactor alarms:
+
+1. Reactor high temperature alarm
+- Description: Reactor temperature exceeds the high alarm setpoint.
+- Possible causes:
+  - Excessive heating or controller malfunction.
+  - Inadequate cooling or blocked jacket flow.
+- Interlocks and actions:
+  - Heater output may be automatically reduced or cut off.
+  - Operator must check steam/thermal fluid valves and jacket flow.
+  - If temperature continues to rise, initiate controlled shutdown.
+
+2. Reactor overpressure alarm
+- Description: Reactor pressure exceeds the high alarm limit.
+- Possible causes:
+  - Gas generation during reaction.
+  - Blocked vent or condenser.
+- Interlocks and actions:
+  - Pressure relief or vent valves may open automatically.
+  - Operator must verify vent path and condenser operation.
+  - Do not open manway until pressure is within safe range.
+
+3. Reactor agitator failure
+- Description: Agitator stops or current drops below threshold.
+- Possible causes:
+  - Motor trip, mechanical jam, or power loss.
+- Actions:
+  - Stop charging of raw materials and acid.
+  - Inform maintenance and supervisor.
+  - Assess impact on batch homogeneity and quality.
+
+Dryer and milling alarms:
+
+1. Dryer inlet temperature high
+- Description: Inlet air temperature above upper limit.
+- Possible causes:
+  - Controller setpoint error.
+  - Fuel or heater malfunction.
+- Actions:
+  - Reduce setpoint or shut down heater as per procedure.
+  - Check temperature sensors and controllers.
+  - Inspect product for signs of discoloration or degradation.
+
+2. Dryer outlet temperature low
+- Description: Outlet temperature below the normal operating range.
+- Possible causes:
+  - Excessive wet feed.
+  - Reduced heat input or air flow.
+- Actions:
+  - Reduce feed rate to the dryer.
+  - Check heating system and air flow.
+  - Monitor product moisture more frequently.
+
+3. Mill overload alarm
+- Description: Mill current or torque above limit.
+- Possible causes:
+  - Excessive feed rate or very hard lumps.
+  - Screen blockage or worn internals.
+- Actions:
+  - Immediately reduce feed rate to the mill.
+  - If alarm persists, stop the mill and inspect internals.
+  - Remove foreign objects or oversize lumps before restart.
+
+Dust and extraction alarms:
+
+1. Dust collector differential pressure high
+- Description: Pressure across filter is too high.
+- Possible causes:
+  - Filter bags loaded or blocked.
+  - Discharge valve stuck or full hopper.
+- Actions:
+  - Check hopper discharge and empty if required.
+  - Inspect filters for damage or blinding.
+  - Do not continue operation with severe dust issues.
+
+2. Extraction fan failure
+- Description: Airflow or fan status alarm.
+- Possible causes:
+  - Motor trip.
+  - Mechanical failure.
+- Actions:
+  - Stop feeding dusty equipment (mill, conveyor).
+  - Investigate fan and restart only when safe.
+
+General alarm handling procedure:
+- Acknowledge the alarm in the control system.
+- Read alarm text and associated parameter values.
+- Compare with normal operating ranges and recent trends.
+- Follow the specific runbook or SOP for that alarm type.
+- Record actions and observations in the shift log and batch record if relevant.

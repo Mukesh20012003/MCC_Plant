@@ -1,0 +1,38 @@
+MCC QC Testing and Specifications
+
+Objective:
+To define the key quality control (QC) tests and acceptance criteria for MCC batches.
+
+Final product tests:
+- Moisture: typically 2.0–5.0 % w/w depending on grade.
+- Bulk density: specified range such as 0.25–0.45 g/mL.
+- Particle size distribution: for example, 90% passing 180 µm.
+- Appearance: white to off-white, free-flowing powder.
+- Any additional tests required by the customer or pharmacopoeia.
+
+In-process QC:
+- After hydrolysis: pH and visual appearance of slurry.
+- After washing: filtrate conductivity and pH.
+- After drying: product temperature and preliminary moisture checks.
+- During milling: visual check for uniformity and absence of foreign particles.
+
+Sampling:
+- Use the approved sampling plan to take representative samples.
+- Label all samples with batch number, sample point, and date.
+- Store and handle samples to avoid contamination or moisture change.
+
+Specifications:
+- Each parameter must meet its defined specification range.
+- Specifications are documented in the MCC finished product specification sheet.
+- Any out-of-specification (OOS) result must be investigated.
+
+Batch release rules:
+- All mandatory QC tests must be completed and within specification.
+- OOS or out-of-trend (OOT) results require documented investigation.
+- QA must approve any rework or disposition decision.
+- Batches failing critical safety or microbiological tests cannot be reworked.
+
+Documentation:
+- Record all test methods, results, and analyst details in QC records.
+- Attach certificates of analysis (COA) to each released batch.
+- Retain records as per regulatory and company requirements.

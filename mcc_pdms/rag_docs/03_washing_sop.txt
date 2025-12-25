@@ -1,0 +1,56 @@
+Washing and Neutralization SOP – MCC Plant
+
+Objective:
+To define the procedure for washing and neutralizing MCC slurry after hydrolysis.
+
+Scope:
+Applies to all MCC batches transferred from the hydrolysis reactor to the washing section.
+
+Key objectives of washing:
+- Remove residual acid from the hydrolyzed slurry.
+- Reduce soluble impurities.
+- Adjust pH and conductivity to defined limits.
+
+Equipment:
+- Washing tanks or filters
+- Agitators
+- Pumps and valves for wash water and filtrate
+- pH and conductivity meters
+
+Procedure:
+
+1. Receiving slurry
+- Confirm that the correct batch is being transferred from the reactor.
+- Record initial slurry temperature and pH.
+
+2. First wash
+- Add the specified volume of wash water to the slurry.
+- Start agitation and mix for the defined time.
+- Allow solids to settle or use filtration to separate filtrate.
+- Measure pH and conductivity of the filtrate.
+- Record results in the batch record.
+
+3. Additional washes
+- If pH and conductivity are not within the target range, perform additional washes.
+- For each wash, repeat the same steps: add water, mix, separate, measure, and record.
+- Do not exceed the maximum number of washes without supervisor approval.
+
+4. Neutralization
+- If required, add neutralizing agent slowly under agitation.
+- Monitor pH during addition to avoid overshoot.
+- Target final slurry pH within the defined range (for example, 6.0–7.5).
+- Record the amount of neutralizing agent used.
+
+5. Final checks
+- Confirm that final wash filtrate conductivity is below the specified limit.
+- Verify pH of the washed slurry is within the acceptable range.
+- If parameters are out of range, inform supervisor and follow deviation procedure.
+
+6. Transfer to dewatering
+- Once washed and neutralized, transfer the slurry to the dewatering equipment.
+- Record transfer details in the batch record.
+
+Safety:
+- Handle chemicals according to their safety data sheets.
+- Avoid direct contact with acidic or alkaline solutions.
+- Ensure good ventilation around wash and neutralization tanks.

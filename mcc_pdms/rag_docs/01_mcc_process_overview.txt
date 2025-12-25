@@ -1,0 +1,51 @@
+MCC Plant Process Overview
+
+The Microcrystalline Cellulose (MCC) plant converts purified alpha-cellulose into MCC using controlled acid hydrolysis, washing, drying, and milling steps. The goal is to consistently produce MCC that meets all quality specifications for moisture, bulk density, particle size, and appearance.
+
+Main process areas:
+1. Raw material reception and pre-treatment
+2. Hydrolysis reactor section
+3. Washing and neutralization
+4. Dewatering
+5. Drying and milling
+6. Sieving and final packing
+
+Raw material reception:
+- Receive purified alpha-cellulose with an approved Certificate of Analysis (COA).
+- Verify identity and key quality attributes as per the raw material specification.
+- Store under controlled conditions to avoid moisture pickup and contamination.
+
+Hydrolysis reactor section:
+- Charge purified alpha-cellulose, water, and acid to the reactor as per the batch recipe.
+- Maintain temperature, agitation, and reaction time within defined ranges.
+- Monitor critical parameters like reactor temperature, jacket temperature, and reactor pressure.
+- At the end of hydrolysis, discharge the slurry to the washing section.
+
+Washing and neutralization:
+- Perform multiple wash cycles to remove free acid and soluble impurities.
+- Control pH and conductivity in the wash filtrate to defined limits.
+- Add neutralizing agent if required to bring the slurry pH into the acceptable range.
+- Proper washing is critical for downstream drying and final product quality.
+
+Dewatering:
+- Remove excess water from the washed slurry using filters or centrifuges.
+- Target a specified solids content in the wet cake.
+- Avoid over-compression, which can make drying less efficient.
+
+Drying and milling:
+- Feed the wet cake to the dryer at a controlled rate.
+- Maintain inlet and outlet air temperatures within the validated range.
+- Dry to a target moisture content suitable for milling and final product stability.
+- Mill the dried material to achieve the desired particle size distribution.
+- Control mill speed, screen size, and feed rate.
+
+Sieving and final packing:
+- Sieve the milled product to remove oversize particles and ensure uniform particle size.
+- Collect fines and reprocess as per procedure, if allowed.
+- Pack the final MCC into approved containers with proper labeling.
+- Record batch number, packing date, and storage conditions.
+
+Batch records:
+- Each batch must have a complete manufacturing record.
+- Record all critical parameters, deviations, and comments.
+- All steps must be signed and dated by the responsible operators and reviewers.

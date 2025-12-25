@@ -1,8 +1,10 @@
 // src/components/Dashboard.jsx
 import { useEffect, useState } from "react";
 import { Line, Doughnut } from "react-chartjs-2";
-import { fetchDashboardSummary } from "../services/api";
 
+const API_BASE = "http://127.0.0.1:8000";
+
+// Small charts section
 function DashboardCharts({ recent_batches }) {
   const lineData = {
     labels: recent_batches.map((b) => b.batch_no),
@@ -17,7 +19,7 @@ function DashboardCharts({ recent_batches }) {
     ],
   };
 
-  const availability = 82; // later compute from data
+  const availability = 82; // placeholder; compute later from data
   const availabilityData = {
     labels: ["Available", "Unavailable"],
     datasets: [
@@ -60,7 +62,6 @@ function DashboardCharts({ recent_batches }) {
         </div>
       </div>
 
-      {/* placeholder for another chart card */}
       <div className="col-lg-3">
         <div className="card shadow-sm h-100 d-flex align-items-center justify-content-center">
           <div className="card-body text-center">
@@ -80,21 +81,47 @@ function Dashboard() {
 
   useEffect(() => {
     const load = () => {
-      fetchDashboardSummary()
+      const token = localStorage.getItem("access");
+      if (!token) {
+        setError("Not authenticated");
+        return;
+      }
+
+      fetch(`${API_BASE}/api/dashboard-summary/`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.status === 401) {
+            throw new Error("Unauthorized");
+          }
+          return res.json();
+        })
         .then((data) => {
           setSummary(data);
           setLastUpdated(new Date());
+          setError("");
         })
-        .catch((err) => setError(err.message));
+        .catch((err) => {
+          console.error(err);
+          setError(err.message || "Failed to load dashboard");
+        });
     };
 
     load();
-    const id = setInterval(load, 60000);
+    const id = setInterval(load, 60000); // refresh every 60s
     return () => clearInterval(id);
   }, []);
 
-  if (error) return <p className="text-center text-danger mt-5">{error}</p>;
-  if (!summary) return <p className="text-center mt-5">Loading...</p>;
+  if (error && !summary) {
+    return <p className="text-center text-danger mt-5">{error}</p>;
+  }
+
+  if (!summary) {
+    return <p className="text-center mt-5">Loading...</p>;
+  }
 
   const {
     total_batches,
@@ -104,7 +131,7 @@ function Dashboard() {
   } = summary;
 
   return (
-     <div className="py-3">
+    <div className="py-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h1 className="h4 mb-0">PRIMARY CRUSHER</h1>
         {lastUpdated && (

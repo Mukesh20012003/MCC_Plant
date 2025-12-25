@@ -1,0 +1,58 @@
+Typical Setpoints and Operating Limits – MCC Plant
+
+Note:
+Actual values must be taken from the approved process specification. The ranges below are generic examples for training and troubleshooting.
+
+Reactor operating conditions:
+- Charge temperature: typically 20–35 °C.
+- Reaction temperature: for example 60–80 °C, held within ±2 °C of setpoint.
+- Reaction time: defined per recipe, for example 30–90 minutes.
+- Agitation speed: set to ensure uniform mixing without excessive foaming.
+
+Key reactor limits:
+- Maximum allowable temperature: do not exceed the validated maximum (example 90 °C).
+- Maximum pressure: must remain below vessel design pressure.
+- pH after hydrolysis: typically acidic; follow the specified range to ensure proper degree of polymerization.
+
+Washing and neutralization:
+- Wash filtrate conductivity target: below a defined limit (for example < 500 µS/cm).
+- Final slurry pH after neutralization: typically near neutral (for example 6.0–7.5).
+- Maximum number of wash cycles: defined in the batch record to balance quality and efficiency.
+
+Dewatering:
+- Target wet cake solids: for example 25–40 % w/w.
+- Too low solids:
+  - Increases dryer load and energy consumption.
+- Too high solids:
+  - Can make cake difficult to convey or break up.
+
+Dryer operating conditions:
+- Inlet air temperature: for example 120–160 °C depending on dryer type and grade.
+- Outlet air temperature: for example 70–90 °C.
+- Product temperature: must stay within safe limits to avoid degradation.
+- Typical drying time: depends on dryer, feed rate, and initial moisture.
+
+Dryer limits:
+- Do not exceed maximum inlet temperature defined in the process specification.
+- Monitor for rapid changes in outlet temperature, which may indicate feed or heater issues.
+
+Milling and sieving:
+- Mill speed: set according to equipment capability and desired particle size.
+- Screen size: chosen based on product grade.
+- Typical aim: 90% of particles below a specified size (for example 180 µm).
+- Avoid feeding large, hard lumps that may damage the mill or cause overloads.
+
+Quality-related limits:
+- Moisture:
+  - Below lower limit: risk of excessive fines and dust.
+  - Above upper limit: risk of caking and stability issues.
+- Bulk density:
+  - Outside specified range may affect downstream handling and customer performance.
+- Appearance:
+  - Significant color change or visible contamination requires investigation.
+
+Use of limits in troubleshooting:
+- When problems occur, check actual values against these ranges.
+- Identify which parameter deviated first in time.
+- Link deviations to alarms, equipment issues, or raw material changes.
+- Use this information along with troubleshooting guides to determine corrective actions.

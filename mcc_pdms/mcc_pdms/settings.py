@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    "django.contrib.postgres",
     'rest_framework',
     'plant',
     'rest_framework_simplejwt',
     "corsheaders",
+    "ragapp",
 ]
 
 MIDDLEWARE = [
@@ -93,8 +95,18 @@ DATABASES = {
         'PASSWORD': '12345',
         'HOST':'localhost',
         'PORT':'3306',
+    },
+    "pg_rag": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mcc_rag",
+        "USER": "postgres",
+        "PASSWORD": "12345",
+        "HOST": "127.0.0.1",
+        "PORT": "5432",
     }
 }
+
+DATABASE_ROUTERS = ["plant.db_routers.RagRouter"]
 
 
 # Password validation
@@ -116,17 +128,19 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
+    "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ],
-    "DEFAULT_PERMISSION_CLASSES": [
+    ),
+    "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
-    ],
+    ),
 }
+
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 

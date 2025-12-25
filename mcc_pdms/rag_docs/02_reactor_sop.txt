@@ -1,0 +1,53 @@
+Hydrolysis Reactor SOP – MCC Plant
+
+Objective:
+To describe the standard operating procedure for running the MCC hydrolysis reactor safely and consistently.
+
+Scope:
+This SOP applies to all MCC production batches processed in the hydrolysis reactor.
+
+Responsibilities:
+- Operators: Execute the procedure, record data, and report deviations.
+- Supervisors: Verify operations and review batch records.
+- QA: Review deviations and approve batch disposition.
+
+Pre-start checks:
+- Verify the reactor is clean and status is "Ready for Use".
+- Confirm that all valves in the process line-up match the standard configuration.
+- Check availability of raw materials: alpha-cellulose, water, and acid.
+- Confirm that all safety interlocks and alarms are functional.
+
+Charging raw materials:
+- Charge purified alpha-cellulose to the reactor according to the batch sheet.
+- Add process water to the specified volume or mass.
+- Slowly dose acid while maintaining agitation to avoid localized overheating.
+- Confirm that the reactor manway is properly closed and sealed.
+
+Reaction conditions:
+- Set the reactor temperature setpoint as per the batch recipe.
+- Start agitation at the recommended speed for uniform mixing.
+- Once target temperature is reached, start the reaction timer.
+- Record temperature, pressure, and agitation speed at defined intervals.
+- Monitor for abnormal trends such as rapid temperature rise or pressure spikes.
+
+In-process checks:
+- Take in-process samples if required by the batch record.
+- Check slurry appearance and viscosity, if applicable.
+- If any parameter goes out of range, follow the deviation procedure.
+
+End of reaction:
+- At the end of the reaction time, stop heating and adjust conditions as required.
+- Confirm that safety interlocks are still healthy.
+- Transfer the reactor contents to the washing section using the designated transfer line.
+- Document transfer start and end times.
+
+Shutdown and cleaning:
+- After batch transfer, flush the reactor with water to remove residual solids.
+- Perform cleaning as per the cleaning SOP if a full clean is required.
+- Update equipment status to "Cleaned" or "Ready" as appropriate.
+
+Safety precautions:
+- Always wear the required PPE including acid-resistant gloves, goggles, and apron.
+- Never open the reactor under pressure or at elevated temperature.
+- Ensure that the acid dosing system has appropriate backflow prevention.
+- In case of acid spill, follow the site spill response procedure.

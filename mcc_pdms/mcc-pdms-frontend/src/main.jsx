@@ -1,10 +1,10 @@
 // src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import "./index.css";
 
-// 1) import and register Chart.js once for the whole app
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,9 +26,10 @@ ChartJS.register(
   Legend
 );
 
-// 2) normal React mount
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>
 );

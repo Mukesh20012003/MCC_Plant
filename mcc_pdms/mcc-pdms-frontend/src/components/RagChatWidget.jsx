@@ -20,7 +20,8 @@ function RagChatWidget() {
     try {
       const data = await fetchRagAnswer(question);
       setMessages((prev) => [...prev, { from: "bot", text: data.answer }]);
-    } catch {
+    } catch (e) {
+      console.error(e);
       setMessages((prev) => [
         ...prev,
         { from: "bot", text: "Sorry, I could not get an answer." },

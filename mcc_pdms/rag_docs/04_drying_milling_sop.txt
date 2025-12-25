@@ -1,0 +1,62 @@
+Drying and Milling SOP – MCC Plant
+
+Objective:
+To define the standard procedure for drying and milling MCC wet cake into finished product.
+
+Scope:
+Applies to all MCC batches after washing and dewatering.
+
+Key quality targets:
+- Moisture within specified range.
+- Particle size distribution within specification.
+- Free-flowing, non-caking powder.
+
+Drying:
+
+1. Pre-start checks
+- Inspect dryer for cleanliness and mechanical readiness.
+- Confirm correct filters and screens are installed.
+- Check that temperature controllers and safety interlocks are functional.
+
+2. Feeding wet cake
+- Confirm solids content of wet cake is within the expected range.
+- Feed the wet cake at a controlled rate to avoid overloading the dryer.
+- Avoid large lumps where possible; break them before feeding.
+
+3. Dryer operation
+- Set inlet and outlet temperature setpoints per recipe.
+- Monitor air temperature and product temperature at defined intervals.
+- Adjust feed rate and air flow to maintain stable operation.
+- Record key parameters in the batch record.
+
+4. Moisture monitoring
+- Take in-process samples as the batch approaches completion.
+- Measure moisture using the approved method.
+- Continue drying until the target moisture range is achieved.
+
+Milling:
+
+1. Mill setup
+- Select the correct mill type and screen size based on product grade.
+- Verify that the mill is clean and free of foreign material.
+- Set mill speed and feed rate as per standard settings.
+
+2. Milling operation
+- Feed dried material steadily to the mill to avoid choking.
+- Monitor mill current and temperature for signs of overload.
+- Collect milled product and direct it to sieving.
+
+3. Sieving and classification
+- Use appropriate sieve stack to remove overs and fines if required.
+- Recycle oversize material to the mill when allowed.
+- Collect in-spec product for final packing.
+
+4. Final checks
+- Verify particle size distribution on a representative sample.
+- Check bulk density and flow properties if applicable.
+- If results are out of spec, evaluate options for rework according to procedure.
+
+Safety:
+- Control dust using extraction systems to reduce explosion risk.
+- Do not open access doors while the dryer or mill is running.
+- Use appropriate PPE for dust environments.

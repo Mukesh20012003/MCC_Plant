@@ -11,12 +11,13 @@ async function loginRequest(username, password) {
   });
 
   if (!res.ok) {
+    // Optionally read error detail from backend here
     throw new Error("Invalid username or password");
   }
 
-  const data = await res.json();
+  const data = await res.json(); // { access, refresh }
 
-  // store tokens in localStorage
+  // Store tokens for later API calls
   localStorage.setItem("access", data.access);
   localStorage.setItem("refresh", data.refresh);
 
@@ -27,15 +28,20 @@ function LoginForm({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+
     try {
       await loginRequest(username, password);
-      onLoginSuccess(); // tell App that login worked
+      onLoginSuccess(); // App will set isLoggedIn(true) and render dashboard
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,8 +57,10 @@ function LoginForm({ onLoginSuccess }) {
                 className="form-control"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Password</label>
               <input
@@ -60,11 +68,18 @@ function LoginForm({ onLoginSuccess }) {
                 className="form-control"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
               />
             </div>
+
             {error && <p className="text-danger small">{error}</p>}
-            <button type="submit" className="btn btn-primary w-100">
-              Login
+
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={loading}
+            >
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
         </div>
