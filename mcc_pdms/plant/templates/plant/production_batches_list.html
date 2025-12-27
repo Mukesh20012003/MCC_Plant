@@ -11,7 +11,7 @@
 
   {% if batches %}
   <div class="table-responsive">
-    <table class="table table-sm align-middle">
+    <table class="table table-sm align-middle table-pdms">
       <thead>
         <tr>
           <th>ID</th>
@@ -33,12 +33,12 @@
           <td>{{ batch.start_time }}</td>
           <td>{{ batch.end_time }}</td>
           <td>
-            <button class="btn btn-sm btn-outline-secondary"
+            <button class="btn btn-sm btn-outline-danger"
                     data-batch-id="{{ batch.id }}"
                     onclick="checkAnomaly(this.dataset.batchId, this)">
-              Check
+              Check anomaly
             </button>
-            <span class="badge ms-2 d-none"></span>
+            <span class="badge ms-2 bg-secondary d-none"></span>
           </td>
         </tr>
         {% endfor %}
@@ -53,15 +53,24 @@
 <script>
   function checkAnomaly(batchId, btn) {
     const badge = btn.nextElementSibling;
+
     fetch("/api/ml/detect-anomaly/", {
       method: "POST",
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": "{{ csrf_token }}",
       },
       body: JSON.stringify({ batch_id: batchId }),
     })
-      .then((r) => r.json())
+      .then(async (r) => {
+        if (!r.ok) {
+          const err = await r.json().catch(() => ({}));
+          console.error("Anomaly error:", r.status, err);
+          throw new Error(err.error || err.detail || "Bad request");
+        }
+        return r.json();
+      })
       .then((data) => {
         badge.classList.remove("d-none");
         badge.title = "Score: " + data.score.toFixed(3);

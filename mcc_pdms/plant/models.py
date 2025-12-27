@@ -54,14 +54,23 @@ class ProductionBatch(models.Model):
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # anomaly fields
+    anomaly_score = models.FloatField(null=True, blank=True)
+    is_anomaly = models.BooleanField(null=True, blank=True)
+
     def __str__(self):
         return self.batch_no
+    
+    class Meta:
+        verbose_name = "Production Batch"
+        verbose_name_plural = "Production Batches"
 
 class QCReport(models.Model):
     batch = models.ForeignKey(
-        ProductionBatch,
+        "plant.ProductionBatch",  # or "ProductionBatch" if same app
         on_delete=models.CASCADE,
-        related_name='qc_reports',  # note plural now
+        related_name="qc_reports",
     )
 
     moisture_actual = models.FloatField(blank=True, null=True)
@@ -107,4 +116,4 @@ class UserProfile(models.Model):
         return f"{self.user.username} ({self.role})"
 
 
-
+        

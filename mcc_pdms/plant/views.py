@@ -35,6 +35,7 @@ from django.urls import reverse
 from .ml_service import predict_quality
 
 from django.db.models import Prefetch
+from django.db.models import Max
 
 
 class RawMaterialViewSet(viewsets.ModelViewSet):
@@ -137,6 +138,23 @@ def create_raw_material_view(request):
                 "bulk_density_g_per_ml": form.cleaned_data["bulk_density"],
                 "particle_size_microns": form.cleaned_data["particle_size"],
             }
+
+            # SAFE auto-generate unique batch_no from existing codes
+            last_code = (
+                RawMaterial.objects
+                .filter(batch_no__startswith="RM-2025-")
+                .aggregate(Max("batch_no"))["batch_no__max"]
+            )
+
+            if last_code:
+                # e.g. "RM-2025-011" → 11
+                last_num = int(last_code.split("-")[-1])
+                next_num = last_num + 1
+            else:
+                next_num = 1
+
+            rm.batch_no = f"RM-2025-{next_num:03d}"
+
             rm.save()
             return redirect("dashboard")
     else:

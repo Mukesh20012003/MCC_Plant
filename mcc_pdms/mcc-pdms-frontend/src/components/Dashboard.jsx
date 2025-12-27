@@ -1,8 +1,8 @@
 // src/components/Dashboard.jsx
 import { useEffect, useState } from "react";
 import { Line, Doughnut } from "react-chartjs-2";
-
-const API_BASE = "http://127.0.0.1:8000";
+import { fetchDashboardSummary } from "../services/api";
+import HelpCard from "./HelpCard";
 
 // Small charts section
 function DashboardCharts({ recent_batches }) {
@@ -38,8 +38,9 @@ function DashboardCharts({ recent_batches }) {
 
   return (
     <div className="row g-3 mb-4">
-      <div className="col-lg-6">
-        <div className="card shadow-sm h-100">
+      {/* main line chart */}
+      <div className="col-lg-8">
+        <div className="card shadow-sm h-100 card-hover">
           <div className="card-body">
             <h6 className="card-title mb-3">Hourly Quality Probability</h6>
             <Line data={lineData} />
@@ -47,26 +48,15 @@ function DashboardCharts({ recent_batches }) {
         </div>
       </div>
 
-      <div className="col-lg-3">
+      {/* availability donut */}
+      <div className="col-lg-4">
         <div className="card shadow-sm h-100 d-flex align-items-center justify-content-center">
           <div className="card-body text-center">
             <h6 className="card-title mb-2">Availability Factor</h6>
             <div style={{ maxWidth: 160, margin: "0 auto" }}>
-              <Doughnut
-                data={availabilityData}
-                options={availabilityOptions}
-              />
+              <Doughnut data={availabilityData} options={availabilityOptions} />
             </div>
             <p className="mt-2 h4 mb-0">{availability.toFixed(1)}%</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="col-lg-3">
-        <div className="card shadow-sm h-100 d-flex align-items-center justify-content-center">
-          <div className="card-body text-center">
-            <h6 className="card-title mb-2">Another Metric</h6>
-            <p className="text-muted mb-0">Coming soon</p>
           </div>
         </div>
       </div>
@@ -81,24 +71,7 @@ function Dashboard() {
 
   useEffect(() => {
     const load = () => {
-      const token = localStorage.getItem("access");
-      if (!token) {
-        setError("Not authenticated");
-        return;
-      }
-
-      fetch(`${API_BASE}/api/dashboard-summary/`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((res) => {
-          if (res.status === 401) {
-            throw new Error("Unauthorized");
-          }
-          return res.json();
-        })
+      fetchDashboardSummary()
         .then((data) => {
           setSummary(data);
           setLastUpdated(new Date());
@@ -116,12 +89,33 @@ function Dashboard() {
   }, []);
 
   if (error && !summary) {
-    return <p className="text-center text-danger mt-5">{error}</p>;
+    return (
+      <div className="d-flex justify-content-center align-items-center py-5">
+        <div className="text-center">
+          <p className="text-danger mb-2">Failed to load dashboard.</p>
+          <p className="text-muted small mb-3">{error}</p>
+          <button
+            className="btn btn-sm btn-outline-primary"
+            onClick={() => window.location.reload()}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  if (!summary) {
-    return <p className="text-center mt-5">Loading...</p>;
+  if (!summary && !error) {
+    return (
+      <div className="d-flex justify-content-center align-items-center py-5">
+        <div className="text-center">
+          <div className="spinner-border text-primary mb-2" role="status" />
+          <p className="mb-0 text-muted small">Loading dashboard data…</p>
+        </div>
+      </div>
+    );
   }
+
 
   const {
     total_batches,
@@ -132,7 +126,8 @@ function Dashboard() {
 
   return (
     <div className="py-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      {/* header */}
+      <div className="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
         <h1 className="h4 mb-0">PRIMARY CRUSHER</h1>
         {lastUpdated && (
           <small className="text-muted">
@@ -142,17 +137,17 @@ function Dashboard() {
       </div>
 
       {/* KPI cards */}
-      <div className="row g-3 mb-3">
-        <div className="col-md-4">
-          <div className="card shadow-sm">
+      <div className="row g-3 mb-4">
+        <div className="col-lg-4 col-md-4 col-sm-12">
+          <div className="card shadow-sm h-100 card-hover">
             <div className="card-body">
               <h6 className="card-title">Total Batches</h6>
               <p className="display-6 mb-0">{total_batches}</p>
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="card shadow-sm">
+        <div className="col-lg-4 col-md-4 col-sm-12">
+          <div className="card shadow-sm h-100 card-hover">
             <div className="card-body">
               <h6 className="card-title">Predicted to Pass</h6>
               <p className="display-6 mb-0 text-success">
@@ -161,8 +156,8 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <div className="col-md-4">
-          <div className="card shadow-sm">
+        <div className="col-lg-4 col-md-4 col-sm-12">
+          <div className="card shadow-sm h-100 card-hover">
             <div className="card-body">
               <h6 className="card-title">QC Reports</h6>
               <p className="display-6 mb-0">{total_qc_reports}</p>
@@ -175,50 +170,70 @@ function Dashboard() {
       <DashboardCharts recent_batches={recent_batches} />
 
       {/* bottom row: table + placeholder chart */}
-      <div className="row g-3">
+      <div className="row g-3 mb-3">
         <div className="col-lg-7">
-          <div className="card shadow-sm">
+          <div className="card shadow-sm h-100 card-hover">
             <div className="card-body">
               <h5 className="card-title mb-3">Recent Batches</h5>
-              <div className="table-responsive">
-                <table className="table table-sm align-middle mb-0">
-                  <thead>
-                    <tr>
-                      <th>Batch ID</th>
-                      <th>Status</th>
-                      <th>Predicted</th>
-                      <th>Probability</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recent_batches.map((b) => (
-                      <tr key={b.id}>
-                        <td>{b.batch_no}</td>
-                        <td>{b.status}</td>
-                        <td>
-                          {b.predicted == null
-                            ? "-"
-                            : b.predicted
-                            ? "Pass"
-                            : "Fail"}
-                        </td>
-                        <td>
-                          {b.probability == null
-                            ? "-"
-                            : b.probability.toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
-                    {recent_batches.length === 0 && (
+                <div className="table-responsive">
+                  <table className="table table-sm table-hover align-middle mb-0">
+                    <thead>
                       <tr>
-                        <td colSpan="4" className="text-muted">
-                          No recent batches.
-                        </td>
+                        <th>Batch ID</th>
+                        <th>Status</th>
+                        <th>Predicted</th>
+                        <th>Probability</th>
+                        <th>Anomaly</th> {/* new column */}
                       </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {recent_batches.map((b) => (
+                        <tr key={b.id}>
+                          <td>{b.batch_no}</td>
+                          <td>{b.status}</td>
+                          <td>
+                            {b.predicted == null
+                              ? "-"
+                              : b.predicted
+                              ? "Pass"
+                              : "Fail"}
+                          </td>
+                          <td>
+                            {b.probability == null
+                              ? "-"
+                              : b.probability.toFixed(2)}
+                          </td>
+                          <td>
+                            {b.is_anomaly == null ? (
+                              <span className="text-muted small">Not checked</span>
+                            ) : (
+                              <span
+                                className={
+                                  b.is_anomaly
+                                    ? "badge bg-danger rounded-pill"
+                                    : "badge bg-success rounded-pill"
+                                }
+                                title={`Anomaly score: ${
+                                  b.anomaly_score?.toFixed(2) ?? "N/A"
+                                }`}
+                              >
+                                {b.is_anomaly ? "High" : "Normal"}
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                      {recent_batches.length === 0 && (
+                        <tr>
+                          <td colSpan="5" className="text-muted text-center small">
+                            No recent batches yet.
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
             </div>
           </div>
         </div>
@@ -230,6 +245,13 @@ function Dashboard() {
               <p className="text-muted mb-0">Bar chart coming soon.</p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* help / about section */}
+      <div className="row g-3 mt-3">
+        <div className="col-lg-12">
+          <HelpCard />
         </div>
       </div>
     </div>

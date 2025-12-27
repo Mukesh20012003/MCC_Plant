@@ -1,5 +1,8 @@
-from rest_framework.decorators import api_view, permission_classes
+from django.db import models
+from rest_framework.decorators import api_view, permission_classes,authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import SessionAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.response import Response
 from .models import ProductionBatch, QCReport
 from rest_framework import status
@@ -7,6 +10,8 @@ from .rag_service import retrieve_top_k, generate_answer
 from .anomaly_service import detect_anomaly, extract_features
 from .rag_service import answer_with_rag
 from ragapp.models import DocumentChunk
+from .ml_anomaly import detect_anomaly_for_batch
+from .ml_service import predict_anomaly
 
 @api_view(["GET"])
 # @permission_classes([AllowAny])
@@ -108,22 +113,60 @@ def rag_query_api(request):
 
 
 @api_view(["POST"])
-# @permission_classes([AllowAny])
+@authentication_classes([SessionAuthentication, JWTAuthentication])
 @permission_classes([IsAuthenticated])
 def detect_anomaly_api(request):
     batch_id = request.data.get("batch_id")
     if not batch_id:
-        return Response({"error": "batch_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "batch_id is required"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         batch = ProductionBatch.objects.get(id=batch_id)
     except ProductionBatch.DoesNotExist:
-        return Response({"error": "batch not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "batch not found"},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
-    feats = extract_features(batch)
-    res = detect_anomaly(feats)
-    return Response({
-        "batch_id": batch.id,
-        "score": res["score"],
-        "is_anomaly": res["is_anomaly"],
-    })
+    # 1) Get QC data for this batch
+    qc_qs = QCReport.objects.filter(batch=batch)
+    if not qc_qs.exists():
+        return Response(
+            {"error": "No QC data for this batch"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    qc_avg = qc_qs.aggregate(
+        moisture_avg=models.Avg("moisture_actual"),
+        ps_avg=models.Avg("particle_size_actual"),
+    )
+
+    moisture = qc_avg["moisture_avg"]
+    particle_size = qc_avg["ps_avg"]
+
+    if moisture is None or particle_size is None:
+        return Response(
+            {"error": "Incomplete QC data for this batch"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # 2) Call ML model
+    score, is_anomaly = predict_anomaly(moisture, particle_size)
+
+    # 3) Persist to DB
+    batch.anomaly_score = score
+    batch.is_anomaly = is_anomaly
+    batch.save(update_fields=["anomaly_score", "is_anomaly"])
+
+    # 4) Return response
+    return Response(
+        {
+            "batch_id": batch.id,
+            "batch_no": batch.batch_no,
+            "score": score,
+            "is_anomaly": is_anomaly,
+        }
+    )

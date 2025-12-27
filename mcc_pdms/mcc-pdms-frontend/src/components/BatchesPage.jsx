@@ -1,6 +1,7 @@
 // src/components/BatchesPage.jsx
 import { useEffect, useState } from "react";
 import { fetchBatches,detectAnomaly } from "../services/api";
+import { AnomalyButton } from "./AnomalyButton";
 
 function BatchesPage() {
   const [batches, setBatches] = useState([]);
@@ -113,7 +114,7 @@ function BatchesPage() {
                     <td>{b.end_time}</td>
 
                     {/* Anomaly column */}
-                    <td>
+                    {/* <td>
                       <button
                         className="btn btn-sm btn-outline-secondary"
                         onClick={() => handleCheckAnomaly(b.id)}
@@ -131,7 +132,11 @@ function BatchesPage() {
                           {anomalyMap[b.id].is_anomaly ? "High" : "Normal"}
                         </span>
                       )}
+                    </td> */}
+                    <td>
+                      <AnomalyButton batchId={b.id} />
                     </td>
+
                   </tr>
                 ))}
 

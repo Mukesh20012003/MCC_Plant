@@ -10,7 +10,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="bg-light">
+<body>
 <nav class="navbar navbar-expand-lg pdms-navbar mb-4">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">MCC PDMS</a>
@@ -52,18 +52,30 @@
   </div>
 {% endif %}
 
-
 <div class="container">
-  {% block content %}{% endblock %}
+  <main class="pdms-main">
+    {% block content %}{% endblock %}
+  </main>
 </div>
 
+<!-- Floating RAG button -->
+<button id="rag-toggle"
+        class="btn btn-primary rounded-circle position-fixed d-flex align-items-center justify-content-center"
+        style="right:1.5rem;bottom:1.5rem;width:52px;height:52px;z-index:1050;">
+  ?
+</button>
 
-<!-- <div id="rag-chat" class="position-fixed" style="right:1.5rem;bottom:1.5rem;width:320px;z-index:1050;">
+<!-- RAG popup panel -->
+<div id="rag-chat"
+     class="position-fixed d-none"
+     style="right:1.5rem;bottom:5rem;width:320px;z-index:1050;">
   <div class="card shadow-sm">
-    <div class="card-header py-2">
+    <div class="card-header py-2 d-flex justify-content-between align-items-center">
       <strong class="small">RAG Assistant</strong>
+      <button type="button" id="rag-close" class="btn-close btn-sm"></button>
     </div>
-    <div id="rag-messages" class="card-body p-2" style="max-height:260px;overflow-y:auto;font-size:0.85rem;">
+    <div id="rag-messages" class="card-body p-2"
+         style="max-height:260px;overflow-y:auto;font-size:0.85rem;">
       <div class="mb-1 d-flex justify-content-start">
         <div class="px-2 py-1 rounded-2 bg-light border">
           Hi, I am the MCC PDMS assistant. Ask me about batches and QC.
@@ -77,16 +89,39 @@
       </div>
     </form>
   </div>
-</div> -->
+</div>
 
-<!-- <script>
-  const ragForm = document.getElementById("rag-form");
-  const ragInput = document.getElementById("rag-input");
+<script>
+  const ragChat     = document.getElementById("rag-chat");
+  const ragToggle   = document.getElementById("rag-toggle");
+  const ragClose    = document.getElementById("rag-close");
+  const ragForm     = document.getElementById("rag-form");
+  const ragInput    = document.getElementById("rag-input");
   const ragMessages = document.getElementById("rag-messages");
+
+  function openRag() {
+    ragChat.classList.remove("d-none");
+  }
+
+  function closeRag() {
+    ragChat.classList.add("d-none");
+  }
+
+  ragToggle.addEventListener("click", function () {
+    if (ragChat.classList.contains("d-none")) {
+      openRag();
+    } else {
+      closeRag();
+    }
+  });
+
+  ragClose.addEventListener("click", closeRag);
 
   function addMsg(text, from) {
     const div = document.createElement("div");
-    div.className = "mb-1 d-flex " + (from === "user" ? "justify-content-end" : "justify-content-start");
+    div.className =
+      "mb-1 d-flex " +
+      (from === "user" ? "justify-content-end" : "justify-content-start");
     div.innerHTML = `<div class="px-2 py-1 rounded-2 ${
       from === "user" ? "bg-primary text-white" : "bg-light border"
     }">${text}</div>`;
@@ -94,29 +129,28 @@
     ragMessages.scrollTop = ragMessages.scrollHeight;
   }
 
-  // ragForm.addEventListener("submit", function (e) {
-  //   e.preventDefault();
-  //   const q = ragInput.value.trim();
-  //   if (!q) return;
-  //   addMsg(q, "user");
-  //   ragInput.value = "";
+  ragForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const q = ragInput.value.trim();
+    if (!q) return;
+    addMsg(q, "user");
+    ragInput.value = "";
 
-  //   fetch("/api/rag/query/", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "X-CSRFToken": "{{ csrf_token }}",
-  //     },
-  //     body: JSON.stringify({ question: q }),
-  //   })
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       addMsg(data.answer || "No answer.", "bot");
-  //     })
-  //     .catch(() => addMsg("Error contacting assistant.", "bot"));
-  // });
-</script> -->
-
+    fetch("/api/rag/query/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ question: q }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        addMsg(data.answer || "No answer.", "bot");
+      })
+      .catch(() => addMsg("Error contacting assistant.", "bot"));
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 {% block extra_js %}{% endblock %}

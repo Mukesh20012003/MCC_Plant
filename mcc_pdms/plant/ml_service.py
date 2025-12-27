@@ -2,11 +2,15 @@
 import os
 import joblib
 import numpy as np
+from django.conf import settings
 
 MODEL_PATH = os.path.join(
     os.path.dirname(os.path.dirname(__file__)),  # up from plant/ to project root
     "quality_model.pkl",
 )
+
+MODEL_PATH = os.path.join(settings.BASE_DIR, "ml_models", "anomaly_iforest.joblib")
+_model = None
 
 _model = None
 _feature_cols = [
@@ -43,3 +47,18 @@ def predict_quality(parameters_json: dict):
     pred = model.predict(X)[0]
 
     return bool(pred), float(proba)
+
+
+
+def get_model():
+    global _model
+    if _model is None:
+        _model = joblib.load(MODEL_PATH)
+    return _model
+
+def predict_anomaly(moisture, particle_size):
+    model = get_model()
+    X = np.array([[moisture, particle_size]])
+    score = float(model.decision_function(X)[0])   # higher = more normal [web:1311]
+    is_anomaly = bool(model.predict(X)[0] == -1)   # -1 = anomaly
+    return score, is_anomaly

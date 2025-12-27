@@ -5,6 +5,7 @@ from pathlib import Path
 import joblib
 from .models import ProductionBatch
 
+
 MODEL_PATH = Path("models/anomaly_iforest.joblib")
 
 FEATURES = ["temp", "pressure", "ph"]  # replace with real fields
