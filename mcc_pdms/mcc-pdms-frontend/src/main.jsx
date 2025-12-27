@@ -11,6 +11,7 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   ArcElement,
   Tooltip,
   Legend,
@@ -21,10 +22,12 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
   ArcElement,
   Tooltip,
   Legend
 );
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

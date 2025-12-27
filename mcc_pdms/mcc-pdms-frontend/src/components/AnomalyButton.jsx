@@ -1,3 +1,4 @@
+// src/components/AnomalyButton.jsx
 import { useState } from "react";
 import { http } from "../services/http";
 
@@ -11,9 +12,7 @@ export function AnomalyButton({ batchId }) {
   const handleClick = async () => {
     try {
       setState((s) => ({ ...s, loading: true }));
-      const data = await http.post("/api/ml/detect-anomaly/", {
-        batch_id: batchId,
-      });
+      const data = await http.post("/api/ml/detect-anomaly/", { batch_id: batchId });
       setState({
         loading: false,
         score: data.score,
@@ -35,19 +34,17 @@ export function AnomalyButton({ batchId }) {
       label = "Anomaly: High";
       badge = (
         <span
-          className="badge bg-danger ms-2"
+          className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800"
           title={`Score: ${scoreText}`}
         >
           High
         </span>
       );
     } else {
-      label = (
-        "Anomaly: Normal"
-      );
+      label = "Anomaly: Normal";
       badge = (
         <span
-          className="badge bg-success ms-2"
+          className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800"
           title={`Score: ${scoreText}`}
         >
           Normal
@@ -59,9 +56,9 @@ export function AnomalyButton({ batchId }) {
   return (
     <button
       type="button"
-      className="btn btn-sm btn-outline-danger d-inline-flex align-items-center"
       onClick={handleClick}
       disabled={state.loading}
+      className="inline-flex items-center px-3 py-1 border border-red-400 text-red-500 text-xs rounded-md hover:bg-red-50 disabled:opacity-50"
     >
       {state.loading ? "Checking..." : label}
       {badge}

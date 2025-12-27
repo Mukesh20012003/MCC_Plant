@@ -1,6 +1,6 @@
 // src/components/BatchesPage.jsx
 import { useEffect, useState } from "react";
-import { fetchBatches,detectAnomaly } from "../services/api";
+import { fetchBatches, detectAnomaly } from "../services/api";
 import { AnomalyButton } from "./AnomalyButton";
 
 function BatchesPage() {
@@ -11,8 +11,7 @@ function BatchesPage() {
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [anomalyMap, setAnomalyMap] = useState({});
 
-
-   const handleCheckAnomaly = async (batchId) => {
+  const handleCheckAnomaly = async (batchId) => {
     try {
       const res = await detectAnomaly(batchId);
       setAnomalyMap((prev) => ({
@@ -24,7 +23,6 @@ function BatchesPage() {
       alert("Failed to check anomaly");
     }
   };
-
 
   useEffect(() => {
     fetchBatches()
@@ -38,34 +36,35 @@ function BatchesPage() {
       });
   }, []);
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
-  if (error) return <p className="text-center text-danger mt-5">{error}</p>;
+  if (loading)
+    return <p className="text-center mt-10 text-gray-500">Loading...</p>;
+  if (error)
+    return <p className="text-center mt-10 text-red-600">{error}</p>;
 
   const visibleBatches = batches.filter((b) => {
     const matchesSearch =
       !search ||
       b.batch_no.toLowerCase().includes(search.toLowerCase()) ||
-      (b.raw_material_name || "")
-        .toLowerCase()
-        .includes(search.toLowerCase());
-    const matchesStatus =
-      statusFilter === "ALL" || b.status === statusFilter;
+      (b.raw_material_name || "").toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === "ALL" || b.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   return (
     <div className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="h4 mb-0">All Production Batches</h2>
-        <div className="d-flex gap-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">
+          All Production Batches
+        </h2>
+        <div className="flex gap-2">
           <input
-            className="form-control form-control-sm"
+            className="border border-gray-300 rounded-md px-3 py-1 text-sm w-52"
             placeholder="Search batch or material"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           <select
-            className="form-select form-select-sm"
+            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -77,80 +76,89 @@ function BatchesPage() {
         </div>
       </div>
 
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-sm align-middle mb-0">
-              <thead>
-                <tr>
-                  <th>Batch</th>
-                  <th>Raw Material</th>
-                  <th>Status</th>
-                  <th>Start</th>
-                  <th>End</th>
-                  <th>Anomaly</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visibleBatches.map((b) => (
-                  <tr key={b.id}>
-                    <td>{b.batch_no}</td>
-                    <td>{b.raw_material_name || b.raw_material}</td>
-                    <td>
+      <div className="bg-white rounded-lg shadow">
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-sm">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  Batch
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  Raw Material
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  Status
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  Start
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  End
+                </th>
+                <th className="px-4 py-2 text-left font-semibold text-gray-700">
+                  Anomaly
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {visibleBatches.map((b) => {
+                const anomaly = anomalyMap[b.id];
+                const isFailed = b.status === "FAILED";
+                const isAnomaly = anomaly?.is_anomaly;
+
+                return (
+                  <tr
+                    key={b.id}
+                    className={`hover:bg-gray-50 transition ${
+                      isAnomaly
+                        ? "border-l-4 border-l-red-500 bg-red-50/60"
+                        : isFailed
+                        ? "bg-red-50"
+                        : ""
+                    }`}
+                  >
+                    <td className="px-4 py-2">{b.batch_no}</td>
+                    <td className="px-4 py-2">
+                      {b.raw_material_name || b.raw_material}
+                    </td>
+                    <td className="px-4 py-2">
                       <span
-                        className={
-                          "badge " +
-                          (b.status === "COMPLETED"
-                            ? "bg-success"
+                        className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          b.status === "COMPLETED"
+                            ? "bg-green-100 text-green-800"
                             : b.status === "FAILED"
-                            ? "bg-danger"
-                            : "bg-warning text-dark")
-                        }
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
                       >
                         {b.status}
                       </span>
                     </td>
-                    <td>{b.start_time}</td>
-                    <td>{b.end_time}</td>
-
-                    {/* Anomaly column */}
-                    {/* <td>
-                      <button
-                        className="btn btn-sm btn-outline-secondary"
-                        onClick={() => handleCheckAnomaly(b.id)}
-                      >
-                        Check
-                      </button>
-                      {anomalyMap[b.id] && (
-                        <span
-                          className={
-                            "badge ms-2 " +
-                            (anomalyMap[b.id].is_anomaly ? "bg-danger" : "bg-success")
-                          }
-                          title={`Score: ${anomalyMap[b.id].score.toFixed(3)}`}
-                        >
-                          {anomalyMap[b.id].is_anomaly ? "High" : "Normal"}
-                        </span>
-                      )}
-                    </td> */}
-                    <td>
-                      <AnomalyButton batchId={b.id} />
-                    </td>
-
-                  </tr>
-                ))}
-
-                {visibleBatches.length === 0 && (
-                  <tr>
-                    <td colSpan="6" className="text-muted">
-                      No batches match the filters.
+                    <td className="px-4 py-2">{b.start_time}</td>
+                    <td className="px-4 py-2">{b.end_time}</td>
+                    <td className="px-4 py-2">
+                      <AnomalyButton
+                        batchId={b.id}
+                        // optional: also trigger map update to highlight row
+                        onChecked={() => handleCheckAnomaly(b.id)}
+                      />
                     </td>
                   </tr>
-                )}
-              </tbody>
-
-            </table>
-          </div>
+                );
+              })}
+              {visibleBatches.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="px-4 py-4 text-center text-gray-500 text-sm"
+                  >
+                    No batches match the filters.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

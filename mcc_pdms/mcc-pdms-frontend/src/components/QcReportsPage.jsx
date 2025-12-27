@@ -20,8 +20,8 @@ function QcReportsPage() {
       });
   }, []);
 
-  if (loading) return <p className="text-center mt-5">Loading...</p>;
-  if (error) return <p className="text-center text-danger mt-5">{error}</p>;
+  if (loading) return <p className="text-center mt-10 text-gray-500">Loading...</p>;
+  if (error) return <p className="text-center mt-10 text-red-600">{error}</p>;
 
   const visibleReports = reports.filter((r) => {
     if (mode === "PASS") return r.predicted_pass === true;
@@ -31,32 +31,35 @@ function QcReportsPage() {
 
   return (
     <div className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="h3 mb-0">QC Reports</h2>
-        <div className="btn-group btn-group-sm">
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-xl font-semibold text-gray-900">QC Reports</h2>
+        <div className="inline-flex rounded-md shadow-sm overflow-hidden text-xs">
           <button
-            className={
-              "btn " +
-              (mode === "ALL" ? "btn-primary" : "btn-outline-primary")
-            }
+            className={`px-3 py-1 border ${
+              mode === "ALL"
+                ? "bg-blue-600 text-white border-blue-600"
+                : "bg-white text-blue-600 border-blue-600"
+            }`}
             onClick={() => setMode("ALL")}
           >
             All
           </button>
           <button
-            className={
-              "btn " +
-              (mode === "PASS" ? "btn-success" : "btn-outline-success")
-            }
+            className={`px-3 py-1 border-t border-b ${
+              mode === "PASS"
+                ? "bg-green-600 text-white border-green-600"
+                : "bg-white text-green-600 border-green-600"
+            }`}
             onClick={() => setMode("PASS")}
           >
             Predicted Pass
           </button>
           <button
-            className={
-              "btn " +
-              (mode === "FAIL" ? "btn-danger" : "btn-outline-danger")
-            }
+            className={`px-3 py-1 border ${
+              mode === "FAIL"
+                ? "bg-red-600 text-white border-red-600"
+                : "bg-white text-red-600 border-red-600"
+            }`}
             onClick={() => setMode("FAIL")}
           >
             Predicted Fail
@@ -64,41 +67,39 @@ function QcReportsPage() {
         </div>
       </div>
 
-      <table className="table table-sm align-middle">
-        <thead>
-          <tr>
-            <th>Batch</th>
-            <th>Predicted</th>
-            <th>Probability</th>
-          </tr>
-        </thead>
-        <tbody>
-          {visibleReports.map((r) => (
-            <tr key={r.id}>
-              <td>{r.batch_no || r.batch}</td>
-              <td>
-                {r.predicted_pass == null
-                  ? "-"
-                  : r.predicted_pass
-                  ? "Pass"
-                  : "Fail"}
-              </td>
-              <td>
-                {r.predicted_probability == null
-                  ? "-"
-                  : r.predicted_probability.toFixed(2)}
-              </td>
-            </tr>
-          ))}
-          {visibleReports.length === 0 && (
+      <div className="bg-white rounded-lg shadow overflow-x-auto">
+        <table className="min-w-full text-sm">
+          <thead className="bg-gray-50">
             <tr>
-              <td colSpan="3" className="text-muted">
-                No QC reports match the filter.
-              </td>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">Batch</th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">Predicted</th>
+              <th className="px-4 py-2 text-left font-semibold text-gray-700">Probability</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {visibleReports.map((r) => (
+              <tr key={r.id} className="hover:bg-gray-50">
+                <td className="px-4 py-2">{r.batch_no || r.batch}</td>
+                <td className="px-4 py-2">
+                  {r.predicted_pass == null ? "-" : r.predicted_pass ? "Pass" : "Fail"}
+                </td>
+                <td className="px-4 py-2">
+                  {r.predicted_probability == null
+                    ? "-"
+                    : r.predicted_probability.toFixed(2)}
+                </td>
+              </tr>
+            ))}
+            {visibleReports.length === 0 && (
+              <tr>
+                <td colSpan="3" className="px-4 py-3 text-center text-gray-500 text-sm">
+                  No QC reports match the filter.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

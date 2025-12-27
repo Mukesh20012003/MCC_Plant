@@ -1,5 +1,6 @@
 // src/services/http.js
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
 function authHeader() {
   const token = localStorage.getItem("access");
@@ -18,7 +19,6 @@ async function request(path, options = {}) {
   const res = await fetch(url, { ...options, headers });
 
   if (!res.ok) {
-    // Try to parse error body
     let detail = "";
     try {
       const data = await res.json();
@@ -31,6 +31,8 @@ async function request(path, options = {}) {
       // auto logout on 401
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
+      // optional hard redirect so App resets immediately
+      window.location.href = "/login";
       throw new Error("Session expired. Please log in again.");
     }
 
